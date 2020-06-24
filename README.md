@@ -49,18 +49,17 @@ cd tigma
 npm install
 npm run start:dev
 ```
-Now you can visit [Tigma Playground (localhost)](http://localhost:8080/public/main.html) for seeing Tigma in action.
 
-## Live Demo
-
+## Live Demo / Playground
+See it in action by visiting [Tigma Playground](https://binalyze.github.io/tigma/public/playground.htm)
 
 ## Work in progress
- - [X] Implement full support for modifiers
+ - [ ] Implement full support for modifiers
  - [ ] Improve playground page
  - [ ] Implement support for aggregation
  - [ ] Implement support for YAML multiple documents
  
  ## Credits
- Special thanks go to the creators of Sigma and all contributors starting with:
+ Special Thanks go to the creators of Sigma and all contributors starting with:
  - [Thomas Patzke](https://github.com/thomaspatzke)
  - [Florian Roth](https://github.com/Neo23x0)
