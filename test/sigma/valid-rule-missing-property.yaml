@@ -1,0 +1,6 @@
+title: Minimal Rule
+#logsource property will be missing
+detection:
+  selection:
+    Property: value
+  condition:  selection

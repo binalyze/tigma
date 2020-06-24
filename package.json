@@ -1,0 +1,90 @@
+{
+  "name": "@binalyze/tigma",
+  "version": "0.9.2",
+  "main": "dist/tigma.js",
+  "publishConfig": {
+    "registry": "https://binalyze.pkgs.visualstudio.com/_packaging/packages/npm/registry/"
+  },
+  "scripts": {
+    "build:ts": "tsc --build tsconfig.json",
+    "build:webpack:debug": "webpack --config webpack.config.js --mode development",
+    "build:webpack:release": "webpack --config webpack.config.js --mode production",
+    "build:debug": "npm run build:ts && npm run build:webpack:debug",
+    "build:release": "npm run build:ts && npm run build:webpack:release",
+    "start:dev": "npm run build:webpack:debug && webpack-dev-server",
+    "start": "tsc --build tsconfig.json && node ./dist/main.js",
+    "prepublishOnly": "npm run build:release",
+    "release": "npm publish",
+    "rimraf": "rm -rf js",
+    "clean": "tsc --build --clean",
+    "test": "npm run build:ts && jest --watch"
+  },
+  "dependencies": {
+    "@types/yaml": "^1.9.7",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.12.2",
+    "crypto-ts": "^1.0.2",
+    "filtrex": "^2.0.0",
+    "inversify": "^5.0.1",
+    "inversify-inject-decorators": "^3.1.0",
+    "reflect-metadata": "^0.1.13",
+    "yaml": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/webpack": "^4.41.17",
+    "@types/node": "^13.13.12",
+    "compression-webpack-plugin": "^3.1.0",
+    "string-similarity": "^4.0.1",
+    "ts-loader": "^7.0.5",
+    "typescript": "^3.9.5",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-obfuscator": "^0.27.4",
+    "@types/jest": "25.1.2",
+    "jest": "^25.2.6",
+    "jest-mock-console": "^1.0.0",
+    "jest-standard-reporter": "^1.0.4",
+    "ts-jest": "25.2.0",
+    "tsconfig-paths": "^3.9.0"
+  },
+  "files": [
+    "dist/*",
+    "README.md",
+    "package.json"
+  ],
+  "jest": {
+    "verbose": true,
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node",
+    "setupFiles": [
+      "../test/jest-setup-test.ts"
+    ],
+    "reporters": [
+      "jest-standard-reporter"
+    ],
+    "testPathIgnorePatterns": [
+      ".*.d.ts",
+      ".*.js"
+    ],
+    "modulePathIgnorePatterns": [],
+    "coverageThreshold": {
+      "global": {
+        "statements": 95,
+        "branches": 95,
+        "functions": 95,
+        "lines": 95
+      }
+    }
+  }
+}

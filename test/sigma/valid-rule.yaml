@@ -1,0 +1,41 @@
+action: global
+title: Valid Rule
+description: Just a sample valid rule
+references:
+  - http://binalyze.com
+author: Emre TINAZTEPE
+logsource:
+  os: windows
+  category: case
+  product: air
+level: medium
+tags:
+  - attack.358
+detection:
+  group:
+    cond1:
+      Processes:
+        Name: oss.exe
+    cond2:
+      Processes:
+        Name: hass.exe
+  apt1:
+    Registry:
+      KeyPath|contains: balla
+      Value: 'a.exe'
+  selection:
+    Processes:
+      Name: csrss.exe
+      CommandLine|contains: SharedSection=1024,20480
+      Modules:
+        DllPath:
+          - ntdll.dll
+          - smss.dll
+    Prefetch:
+      CommandLine|contains: 'Mimikatz.exe'
+    Event:
+      ID:
+        - 4624
+        - 1900
+  condition:  (any of group) or 1 of them or (any of selection*)
+  timeframe: '5w'

@@ -1,0 +1,7 @@
+/node_modules/
+/dist/
+.npmrc
+/.idea/
+/.idea/workspace.xml
+/.vs/
+**/.DS_Store

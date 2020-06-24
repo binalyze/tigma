@@ -1,0 +1,9 @@
+title: Minimal Rule
+logsource:
+  os: windows
+  category: case
+  product: air
+detection:
+  selection:
+    Property: value
+  condition:  selection

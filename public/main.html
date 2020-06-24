@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" href="logo.png">
+
+  <title>Tigma Playground</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="styles/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="styles/grid.css" rel="stylesheet">
+  <link href="styles/jquery.json-viewer.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
+
+  <img alt="SigmaJS Playground" src="playground-header.png" class="mx-auto d-block">
+
+  <h3>Sigma Rule</h3>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="dropdown float-right mb-2">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="examples" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          See Examples
+        </button>
+        <div class="dropdown-menu" aria-labelledby="examples">
+          <a class="dropdown-item" href="#">Search in Autoruns</a>
+          <a class="dropdown-item" href="#">Search in Prefetch</a>
+          <a class="dropdown-item" href="#">Search in EventLogs</a>
+          <a class="dropdown-item" href="#">Search in Shellbags</a>
+          <a class="dropdown-item" href="#">Search in TCPTable</a>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="rule-yaml">Rule YAML</label> <span id="rule-status" class="badge badge-success">Valid Rule</span>
+        <textarea class="form-control" id="rule-yaml" rows="10" wrap="soft">
+title: Minimal Rule
+logsource:
+  category: json
+  product: air
+detection:
+  selection:
+    Process:
+      Name: smss.exe
+      CommandLine|contains: cmd.exe
+  condition: selection
+        </textarea>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="alert alert-success" role="alert">
+            Signature Matched
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <img title="View Case HTML" alt="View Case HTML" src="icon-html.svg" height="100%" class="float-right" style="cursor: pointer;">
+        </div>
+        <div class="col-sm-2">
+          <img title="View Case JSON" alt="View Case JSON" src="icon-json.svg" height="100%" class="float-right" style="cursor: pointer;">
+        </div>
+      </div>
+
+      <h3>Engine Log</h3>
+      <div class="row">
+        <div class="col-sm-12">
+          <div id="log"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <pre id="case-json"></pre>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label for="rule-parsed">Rule Parsed</label>
+        <pre id="rule-parsed"></pre>
+      </div>
+    </div>
+  </div>
+
+</div> <!-- /container -->
+<script type="text/javascript" src="scripts/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="scripts/tether.min.js"></script>
+<script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+<script type="text/javascript" src="./case.js"></script>
+<script type="text/javascript" src="../dist/tigma.js"></script>
+<script type="text/javascript" src="scripts/jquery.json-viewer.js"></script>
+<script type="text/javascript" src="scripts/playground.js"></script>
+</body>
+</html>
