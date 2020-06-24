@@ -44,9 +44,8 @@ logsource:
   product: air
 detection:
   selection:
-    Process:
-      Name: smss.exe
-      CommandLine|contains: cmd.exe
+    Processes:
+      Name: csrss.exe
   condition: selection
         </textarea>
       </div>
@@ -54,8 +53,8 @@ detection:
       <h3>Scan Result</h3>
       <div class="row">
         <div class="col-sm-8">
-          <div class="alert alert-success" role="alert">
-            Signature Matched
+          <div id="match-result" class="alert alert-success" role="alert">
+            Scan result: ---
           </div>
         </div>
         <div class="col-sm-2">

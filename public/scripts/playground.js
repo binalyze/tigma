@@ -68,11 +68,28 @@ function setRuleStatus(isValid)
   }
 }
 
+function setMatchResult(isMatched)
+{
+  if(isMatched)
+  {
+    $('#match-result').removeClass('alert-danger')
+    .addClass('alert-success')
+    .html('Scan result: DETECTED');
+  }
+  else
+  {
+    $('#match-result').removeClass('alert-success')
+    .addClass('alert-danger')
+    .html('Scan result: NO MATCH');
+  }
+}
+
 function parseRule()
 {
   // Clear for now
   viewJSON(null, '#rule-parsed');
   setRuleStatus(false);
+  setMatchResult(false);
   
   const ruleContent = $('#rule-yaml').val();
   
@@ -95,6 +112,10 @@ function parseRule()
   viewJSON(conditions, '#rule-parsed');
   
   setRuleStatus(true);
+  
+  const matched = engine.scan(rule, caseJSON);
+  
+  setMatchResult(matched);
   
   logger.info(`Rule parsing succeeded`);
 }

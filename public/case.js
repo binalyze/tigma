@@ -1,4 +1,4 @@
-const json = {
+const caseJSON = {
   Processes: [
     {
       Name: 'csrss.exe',
