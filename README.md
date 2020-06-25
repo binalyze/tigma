@@ -27,8 +27,8 @@ detection:
   selection:
     Process:
       Name: 
-        - a.exe
-        - b.exe
+        - FancyRAT.exe
+        - Lolbin.exe
       DigitalSignature:
         Publisher: Ultimate APT Company
     Autoruns:
