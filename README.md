@@ -51,7 +51,7 @@ npm run start:dev
 ```
 
 ## Live Demo / Playground
-See it in action by visiting [Tigma Playground](https://binalyze.github.io/tigma/public/playground.htm)
+See it in action by visiting <a href="https://binalyze.github.io/tigma/public/playground.htm" target="_blank">Tigma Playground</a>
 
 ## Work in progress
  - [ ] Implement full support for modifiers
