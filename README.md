@@ -1,4 +1,4 @@
-![Tigma](public/header-image.png "Sigma + TypeScript = Tigma")
+[![Tigma](public/header-image.png "Sigma + TypeScript = Tigma")](#)
 
 # Tigma
 Tigma is a fully compliant library for loading, parsing, and validating Sigma rules in a JS environment (browser or node). This enables Sigma to reach even further by opening up new platforms supporting Javascript (almost anything out there). 
@@ -54,7 +54,7 @@ npm run start:dev
 ```
 
 ## Live Demo / Playground
-![Playground](public/playground-header.png "Tigma Playground")
+[![Playground](public/playground-header.png "Tigma Playground")](#)
 
 See it in action by visiting <a href="https://binalyze.github.io/tigma/public/playground.htm" target="_blank">Tigma Playground</a>
 
