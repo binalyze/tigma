@@ -58,8 +58,6 @@ npm run start:dev
 
 See it in action by visiting <a href="https://binalyze.github.io/tigma/public/playground.htm" target="_blank">Tigma Playground</a>
 
-<img src="public/playground-header.png"></img>
-
 ## Work in progress
  - [ ] Implement full support for modifiers
  - [ ] Improve playground page
