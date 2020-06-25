@@ -1,3 +1,6 @@
+---
+layout: cayman
+---
 [![Tigma](public/header-image.png "Sigma + TypeScript = Tigma")](#)
 
 # Tigma
