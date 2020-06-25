@@ -169,6 +169,14 @@ export class SigmaScanner implements ISigmaScanner {
             //TODO(emre): Check type here
             matched = (target as string).indexOf(source as string) >= 0;
         }
+        else if (modifiers.find((m:Modifier) => m.value === 'startswith'))
+        {
+            matched = (target as string).startsWith(source as string);
+        }
+        else if (modifiers.find((m:Modifier) => m.value === 'endswith'))
+        {
+            matched = (target as string).endsWith(source as string);
+        }
         else
         {
             matched = source === target;

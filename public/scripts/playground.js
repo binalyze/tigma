@@ -120,11 +120,31 @@ function parseRule()
   logger.info(`Rule parsing succeeded`);
 }
 
+function loadTemplateRule(name)
+{
+  const ruleContent = $(`#template-rules > #${name}`).html().trim();
+  
+  $('#rule-yaml').val(ruleContent);
+}
+
 function initUI()
 {
   $('.dropdown-toggle').dropdown();
   $('#rule-yaml').on('change keyup paste', parseRule);
   $('#rule-status').html('Valid Rule');
+  
+  $('.dropdown-menu a').click(function()
+  {
+    const ruleName = $(this).data('rule');
+  
+    loadTemplateRule(ruleName);
+    
+    $('#examples').text($(this).text());
+    
+    parseRule();
+  });
+  
+  loadTemplateRule('minimal');
 }
 
 $(document).ready(main);

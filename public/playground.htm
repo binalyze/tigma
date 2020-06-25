@@ -28,40 +28,29 @@
           See Examples
         </button>
         <div class="dropdown-menu" aria-labelledby="examples">
-          <a class="dropdown-item" href="#">Search in Autoruns</a>
-          <a class="dropdown-item" href="#">Search in Prefetch</a>
-          <a class="dropdown-item" href="#">Search in EventLogs</a>
-          <a class="dropdown-item" href="#">Search in Shellbags</a>
-          <a class="dropdown-item" href="#">Search in TCPTable</a>
+          <a class="dropdown-item" href="#" data-rule="autoruns">Search in Autoruns</a>
+          <a class="dropdown-item" href="#" data-rule="services">Search in Services</a>
+          <a class="dropdown-item" href="#" data-rule="wmiscripts">Search in WMI Scripts</a>
+          <a class="dropdown-item" href="#" data-rule="prefetch">Search in Prefetch</a>
+          <a class="dropdown-item" href="#" data-rule="tcptable">Search in TCPTable</a>
+          <a class="dropdown-item" href="#" data-rule="dnscache">Search in DNSCache</a>
         </div>
       </div>
       <div class="form-group">
         <label for="rule-yaml">Rule YAML</label> <span id="rule-status" class="badge badge-success">Valid Rule</span>
-        <textarea class="form-control" id="rule-yaml" rows="10" wrap="soft">
-title: Minimal Rule
-logsource:
-  category: json
-  product: air
-detection:
-  selection:
-    Processes:
-      Name: csrss.exe
-  condition: selection
-        </textarea>
+        <textarea class="form-control" id="rule-yaml" rows="10" wrap="soft"></textarea>
       </div>
 
-      <h3>Scan Result</h3>
+      <h3>Scan Target</h3>
       <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-12">
           <div id="match-result" class="alert alert-success" role="alert">
             Scan result: ---
           </div>
         </div>
-        <div class="col-sm-2">
-          <img title="View Case HTML" alt="View Case HTML" src="icon-html.svg" height="100%" class="float-right" style="cursor: pointer;">
-        </div>
-        <div class="col-sm-2">
-          <img title="View Case JSON" alt="View Case JSON" src="icon-json.svg" height="100%" class="float-right" style="cursor: pointer;">
+        <div class="col-sm-12">
+          <img title="View Case JSON" alt="View Case JSON" src="icon-json.svg" height="30px" style="cursor: pointer;">&nbsp;&nbsp;<a href="https://cdn.binalyze.com/irec-resources/IREC-Sample-Report.html" target="_blank">View Case HTML</a>&nbsp;&nbsp;
+          <img title="View Case HTML" alt="View Case HTML" src="icon-html.svg" height="30px" style="cursor: pointer;">&nbsp;&nbsp;<a href="https://cdn.binalyze.com/irec-resources/IREC-Sample-Report.json" target="_blank">Download Case JSON</a>
         </div>
       </div>
 
@@ -86,6 +75,89 @@ detection:
     </div>
   </div>
 
+  <div id="template-rules" class="invisible">
+    <div id="minimal">
+title: Minimal Rule
+logsource:
+  category: json
+  product: air
+detection:
+  selection:
+    Processes:
+      Name: csrss.exe
+  condition: selection
+    </div>
+    <div id="autoruns">
+title: Scan Autorun Entries
+logsource:
+  category: json
+  product: air
+detection:
+  selection:
+    AutorunsRegistry:
+      CommandLine|contains: vm3dservice.exe
+  condition: any of them
+    </div>
+    <div id="services">
+title: Scan Service Entries
+logsource:
+  category: json
+  product: air
+detection:
+  selection:
+    AutorunsServices:
+      KeyPath|contains: 1394ohci
+      Hash: 782141AB1DD7ACDE6EA08B5BAFDE8BADD05B81D38C18E097D6D9C46102056EB1
+  condition: selection
+    </div>
+    <div id="prefetch">
+title: Scan Prefetch Entries
+logsource:
+  category: json
+  product: air
+detection:
+  selection:
+    Prefetch:
+      FilePath|contains:
+        - icacls.exe
+        - psexec.exe
+        - bitsadmin.exe
+  condition: selection
+    </div>
+    <div id="wmiscripts">
+title: Scan WMI Scripts
+logsource:
+  category: json
+  product: air
+detection:
+  selection:
+    WMICommandLine:
+      Command|contains: powershell.exe
+  condition: selection
+    </div>
+    <div id="dnscache">
+title: Scan DNSCache Entries
+logsource:
+  category: json
+  product: air
+detection:
+  selection:
+    DnsCache:
+      Name|endswith: binalyze.com
+  condition: selection
+    </div>
+    <div id="tcptable">
+title: Scan TCP Table Entries
+logsource:
+  category: json
+  product: air
+detection:
+  selection:
+    TcpTable:
+      RemoteAddress: 40.90.23.154
+  condition: selection
+    </div>
+  </div>
 </div> <!-- /container -->
 <script type="text/javascript" src="scripts/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="scripts/tether.min.js"></script>
