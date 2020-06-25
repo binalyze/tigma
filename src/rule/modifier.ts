@@ -1,13 +1,16 @@
+import {ModifierValue} from "./modifier-value.enum";
+
 export class Modifier
 {
-    public value: string;
+    public value: ModifierValue;
     public negate: boolean;
 
     constructor(modifier: string)
     {
         this.negate = modifier.indexOf('!') == 0;
 
-        this.value = (this.negate) ? modifier.substring(1) : modifier;
+        //TODO(emre): We better validate this against supported modifiers
+        this.value = ((this.negate) ? modifier.substring(1) : modifier) as ModifierValue;
     }
 
     static extractIdentifiers(identifier: string): Modifier[]

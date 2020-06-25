@@ -150,10 +150,12 @@ export class Detection
         switch (quantifier)
         {
             case Quantifier.All:
-                return `(${conditions.join(' and ')})`;
+                return (conditions.length > 1) ? `(${conditions.join(' and ')})`
+                                               : `(${conditions.join('')})`;
 
             case Quantifier.Any:
-                return `(${conditions.join(' or ')})`;
+                return (conditions.length > 1) ? `(${conditions.join(' or ')})`
+                                               : `(${conditions.join('')})`;
 
             default:
                 const number = parseInt(quantifier, 10);
@@ -175,7 +177,8 @@ export class Detection
 
                 const combinationGroups = combinations.map((c:string[]) => `(${c.join(' and ')})`);
 
-                return `(${combinationGroups.join(' or ')})`;
+                return (combinationGroups.length > 1) ? `(${combinationGroups.join(' or ')})`
+                                                      : `${combinationGroups.join('')}`;
         }
     }
 }

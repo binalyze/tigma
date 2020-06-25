@@ -18,7 +18,7 @@
 <body>
 <div class="container">
 
-  <img alt="SigmaJS Playground" src="playground-header.png" class="mx-auto d-block">
+  <img alt="Tigma Playground" src="playground-header.png" class="mx-auto d-block">
 
   <h3>Sigma Rule</h3>
   <div class="row">
@@ -38,7 +38,7 @@
       </div>
       <div class="form-group">
         <label for="rule-yaml">Rule YAML</label> <span id="rule-status" class="badge badge-success">Valid Rule</span>
-        <textarea class="form-control" id="rule-yaml" rows="10" wrap="soft"></textarea>
+        <textarea class="form-control" id="rule-yaml" rows="15"></textarea>
       </div>
 
       <h3>Scan Target</h3>
@@ -49,8 +49,8 @@
           </div>
         </div>
         <div class="col-sm-12">
-          <img title="View Case JSON" alt="View Case JSON" src="icon-json.svg" height="30px" style="cursor: pointer;">&nbsp;&nbsp;<a href="https://cdn.binalyze.com/irec-resources/IREC-Sample-Report.html" target="_blank">View Case HTML</a>&nbsp;&nbsp;
-          <img title="View Case HTML" alt="View Case HTML" src="icon-html.svg" height="30px" style="cursor: pointer;">&nbsp;&nbsp;<a href="https://cdn.binalyze.com/irec-resources/IREC-Sample-Report.json" target="_blank">Download Case JSON</a>
+          <img title="View Case JSON" alt="View Case JSON" src="icon-html.svg" height="30px" style="cursor: pointer;">&nbsp;&nbsp;<a href="https://cdn.binalyze.com/irec-resources/IREC-Sample-Report.html" target="_blank">View Case HTML</a>&nbsp;&nbsp;
+          <img title="View Case HTML" alt="View Case HTML" src="icon-json.svg" height="30px" style="cursor: pointer;">&nbsp;&nbsp;<a href="https://cdn.binalyze.com/irec-resources/IREC-Sample-Report.json" target="_blank">View Case JSON</a>
         </div>
       </div>
 
@@ -104,11 +104,13 @@ logsource:
   category: json
   product: air
 detection:
-  selection:
+  cond1:
     AutorunsServices:
       KeyPath|contains: 1394ohci
-      Hash: 782141AB1DD7ACDE6EA08B5BAFDE8BADD05B81D38C18E097D6D9C46102056EB1
-  condition: selection
+  cond2:
+    AutorunsServices:
+      EntryName: ahcache
+  condition: 2 of them
     </div>
     <div id="prefetch">
 title: Scan Prefetch Entries
@@ -165,6 +167,7 @@ detection:
 <script type="text/javascript" src="./case.js"></script>
 <script type="text/javascript" src="../dist/tigma.js"></script>
 <script type="text/javascript" src="scripts/jquery.json-viewer.js"></script>
+<script type="text/javascript" src="scripts/console-logger.js"></script>
 <script type="text/javascript" src="scripts/playground.js"></script>
 </body>
 </html>

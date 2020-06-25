@@ -9,7 +9,10 @@ The library is compliant with original Sigma Language specification and doesn't 
 At its core, it converts Sigma Rule to an Abstract Syntax Tree (AST) of Identifier objects which makes it easier to implement backends. 
 
 The only available backend, for now, is the "Sigma JSON Scanner" which is the main reason for developing this library.
- 
+
+### Evaluation
+Tigma uses lazy evaluation behind the scenes meaning that writing a condition such as "1 of them" will return true when the first condition is matched without requiring the evaluation of the remaining conditions.  
+
 ## Tigma: Empowering DFIR with Sigma
 As you already know, Sigma is a SIEM oriented language which is easy to read/write and share which made it receive a high adoption rate in a short period of time. This is great but wouldn't it better to scan a full JSON file such as the forensic state of the endpoint captured at a specific time? We asked this question some time ago and the answer was obviously YES!
 
@@ -51,7 +54,11 @@ npm run start:dev
 ```
 
 ## Live Demo / Playground
+![Playground](public/playground-header.png "Tigma Playground")
+
 See it in action by visiting <a href="https://binalyze.github.io/tigma/public/playground.htm" target="_blank">Tigma Playground</a>
+
+<img src="public/playground-header.png"></img>
 
 ## Work in progress
  - [ ] Implement full support for modifiers

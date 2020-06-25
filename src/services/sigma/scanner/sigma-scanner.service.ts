@@ -9,6 +9,7 @@ import {Modifier} from "../../../rule/modifier";
 import {IdentifierType} from "../../../rule/identifier-type.enum";
 import {Detection} from "../../../rule/detection";
 import {ObjectLiteral} from "../../../types/object-literal";
+import {ModifierValue} from "../../../rule/modifier-value.enum";
 
 @injectable()
 export class SigmaScanner implements ISigmaScanner {
@@ -44,7 +45,11 @@ export class SigmaScanner implements ISigmaScanner {
             //
             let lazyConditionExpression = expandedCondition;
 
-            conditions.forEach((c:string) => {
+            for(let i in conditions)
+            {
+                const c = conditions[i];
+
+                this.logger.debug(`Converting condition ${c} to lazy evaluator`);
 
                 //
                 // We have the condition group here. Possibilities are:
@@ -52,7 +57,7 @@ export class SigmaScanner implements ISigmaScanner {
                 // - selection.cond1
                 //
 
-                const reDotAccessorPattern = `(${c}\.\\w+)`;
+                const reDotAccessorPattern = `(${c}\\.\\w+)`;
                 const reGroupCondition =  new RegExp(reDotAccessorPattern);
 
                 if(reGroupCondition.test(lazyConditionExpression))
@@ -69,7 +74,7 @@ export class SigmaScanner implements ISigmaScanner {
                 {
                     lazyConditionExpression = lazyConditionExpression.replace(c, `evaluateCondition("${c}")`);
                 }
-            });
+            }
 
             this.logger.debug(`Re-written rule for lazy evaluation: ${lazyConditionExpression}`);
 
@@ -160,29 +165,82 @@ export class SigmaScanner implements ISigmaScanner {
         return (multiple) ? json : matched;
     }
 
+    private getModifier(list: Modifier[], modifierValue: ModifierValue): Modifier|null
+    {
+        const found = list.find((m:Modifier) => m.value === modifierValue);
+
+        if(!found)
+        {
+            return null;
+        }
+
+        return found;
+    }
+
+    private matchString(sourceParam: string, targetParam: string, modifiers: Modifier[]): boolean
+    {
+        const source = sourceParam?.toLowerCase();
+        const target = targetParam?.toLowerCase();
+
+        // Check if both equal (even when nullish)
+        if(source === target)
+        {
+            return true;
+        }
+
+        // Check if one is nullish
+        if(!source || !target)
+        {
+            return false;
+        }
+
+        let modifier: Modifier = null;
+
+        //TODO(emre): Check for wildcards ? and *
+        if ((modifier = this.getModifier(modifiers, ModifierValue.Contains)) != null)
+        {
+            return target.indexOf(source) >= 0;
+        }
+        else if ((modifier = this.getModifier(modifiers, ModifierValue.StartsWith)) != null)
+        {
+            return target.startsWith(source);
+        }
+        else if ((modifier = this.getModifier(modifiers, ModifierValue.EndsWith)) != null)
+        {
+            return target.endsWith(source);
+        }
+        //TODO(emre): Implement the rest (ordered from left to right)
+        else
+        {
+            return source === target;
+        }
+    }
+
     private matchPrimitive(source: Primitive, target: Primitive, modifiers: Modifier[]): boolean
     {
         let matched = false;
 
-        if (modifiers.find((m:Modifier) => m.value === 'contains'))
+        const type = typeof target;
+
+        switch (type)
         {
-            //TODO(emre): Check type here
-            matched = (target as string).indexOf(source as string) >= 0;
-        }
-        else if (modifiers.find((m:Modifier) => m.value === 'startswith'))
-        {
-            matched = (target as string).startsWith(source as string);
-        }
-        else if (modifiers.find((m:Modifier) => m.value === 'endswith'))
-        {
-            matched = (target as string).endsWith(source as string);
-        }
-        else
-        {
-            matched = source === target;
+            case "string":
+                matched = this.matchString(source as string, target as string, modifiers);
+                break;
+            case "number":
+            case "boolean":
+            default: // covers null value
+                matched = source === target;
         }
 
-        return matched;
+        //
+        // Check if we should negate it?
+        // We don't expect more than one to be negated (at least for now)
+        //
+
+        const negate = modifiers.find((m: Modifier) => m.negate === true) !== undefined;
+
+        return (negate) ? !matched : matched;
     }
 
     private filterByPrimitive(json: any, identifier: Identifier): boolean

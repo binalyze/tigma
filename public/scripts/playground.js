@@ -1,32 +1,6 @@
 let engine = null;
 
-let logger =
-{
-  debugLoggingEnabled: true,
-  setDebugLogging: (enabled) =>
-  {
-    this.debugLoggingEnabled = enabled;
-  },
-  debug: (message) =>
-  {
-    if(this.debugLoggingEnabled)
-    {
-      $('#log').prepend(`debug: ${message}</br>`);
-    }
-  },
-  info: (message) =>
-  {
-    $('#log').prepend(`info: ${message}</br>`);
-  },
-  warn: (message) =>
-  {
-    $('#log').prepend(`warn: ${message}</br>`);
-  },
-  error: (message) =>
-  {
-    $('#log').prepend(`<font color="red">error: ${message}</font></br>`);
-  }
-};
+const logger = new ConsoleLogger();
 
 function main()
 {
@@ -45,11 +19,6 @@ function main()
 function viewJSON(json, targetElement)
 {
   $(targetElement).jsonViewer(json);
-}
-
-function clearLog()
-{
-  //TODO(emre): implement this
 }
 
 function setRuleStatus(isValid)
@@ -127,6 +96,31 @@ function loadTemplateRule(name)
   $('#rule-yaml').val(ruleContent);
 }
 
+function addTabSupport()
+{
+  $("textarea").keydown(function(e)
+  {
+    if(e.keyCode === 9)
+    {
+      e.preventDefault();
+      for(let i=0; i<2; i++)
+      {
+        const start = this.selectionStart,
+          end = this.selectionEnd,
+          value = $(this).val();
+    
+        $(this).val(value.substring(0, start)
+          + " "
+          + value.substring(end));
+        
+        this.selectionStart = this.selectionEnd = start + 1;
+      }
+      
+      return false;
+    }
+  });
+}
+
 function initUI()
 {
   $('.dropdown-toggle').dropdown();
@@ -145,6 +139,8 @@ function initUI()
   });
   
   loadTemplateRule('minimal');
+  
+  addTabSupport();
 }
 
 $(document).ready(main);
