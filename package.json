@@ -1,10 +1,7 @@
 {
   "name": "@binalyze/tigma",
-  "version": "0.9.2",
+  "version": "1.0.0",
   "main": "dist/tigma.js",
-  "publishConfig": {
-    "registry": "https://binalyze.pkgs.visualstudio.com/_packaging/packages/npm/registry/"
-  },
   "scripts": {
     "build:ts": "tsc --build tsconfig.json",
     "build:webpack:debug": "webpack --config webpack.config.js --mode development",
