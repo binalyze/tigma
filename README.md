@@ -54,7 +54,7 @@ npm run start:dev
 ```
 
 ## Live Demo / Playground
-[![Playground](public/playground-header.png "Tigma Playground")](#)
+[![Playground](public/playground-header.png "Tigma Playground")](https://binalyze.github.io/tigma/public/playground.htm)
 
 See it in action by visiting <a href="https://binalyze.github.io/tigma/public/playground.htm" target="_blank">Tigma Playground</a>
 
