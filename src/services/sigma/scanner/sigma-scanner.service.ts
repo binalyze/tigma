@@ -217,19 +217,32 @@ export class SigmaScanner implements ISigmaScanner {
             {
                 matched = target?.endsWith(source) ?? false;
             }
+            else if((modifier = this.getModifier(modifiers, ModifierValue.Equals)) != null)
+            {
+                matched = source === target;
+            }
             else
             {
                 matched = source === target;
             }
         }
 
-        return (modifier?.negate) ? !matched : matched;
+        return matched;
+    }
+
+    private matchNumber(source: number, target: number): boolean
+    {
+        return source === target;
+    }
+
+    private matchBoolean(source: boolean, target: boolean): boolean
+    {
+        return source === target;
     }
 
     private matchPrimitive(source: Primitive, target: Primitive, modifiers: Modifier[]): boolean
     {
         let matched = false;
-
         const type = typeof target;
 
         switch (type)
@@ -238,14 +251,17 @@ export class SigmaScanner implements ISigmaScanner {
                 matched = this.matchString(source as string, target as string, modifiers);
                 break;
             case "number":
+                matched = this.matchNumber(source as number, target as number);
+                break;
             case "boolean":
+                matched = this.matchBoolean(source as boolean, target as boolean);
+                break;
             default: // covers null value
                 matched = source === target;
+                break;
         }
 
-        this.logger.debug(`Source ${source} == Target ${target} = ${matched}`);
-
-        return matched;
+        return this.shouldNegate(modifiers) ? !matched : matched;
     }
 
     private filterByPrimitive(json: any, identifier: Identifier): boolean

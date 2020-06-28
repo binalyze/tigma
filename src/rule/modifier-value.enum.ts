@@ -4,6 +4,7 @@ export enum ModifierValue
     EndsWith = 'endswith',
     StartsWith = 'startswith',
     All = 'all',
+    Equals = 'equals',
     //TOOD(emre): Implement support for modifiers below
     Base64 = 'base64',
     Base64Offset = 'base64offset',
