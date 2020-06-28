@@ -10,6 +10,7 @@ import {IdentifierType} from "../../../rule/identifier-type.enum";
 import {Detection} from "../../../rule/detection";
 import {ObjectLiteral} from "../../../types/object-literal";
 import {ModifierValue} from "../../../rule/modifier-value.enum";
+import {TypeUtils} from "../../../utils/type-utils";
 
 @injectable()
 export class SigmaScanner implements ISigmaScanner {
@@ -87,7 +88,7 @@ export class SigmaScanner implements ISigmaScanner {
 
             const result = expression(json);
 
-            this.logger.debug(`Rule '${rule.description}' detection result: ${result}`);
+            this.logger.debug(`Rule '${rule.title}' detection result: ${result}`);
 
             return result;
         }
@@ -129,32 +130,36 @@ export class SigmaScanner implements ISigmaScanner {
 
         this.logger.debug(`Identifiers: ${JSON.stringify(identifierTree, null, 2)}`);
 
-        const matched = this.matchCondition(json, identifierTree);
-
-        return matched != null;
+        return this.matchCondition(json, identifierTree);
     }
 
-    private matchCondition(json: ObjectLiteral, condition: Identifier): object
+    private matchCondition(caseJSON: ObjectLiteral, condition: Identifier): boolean
     {
-        const multiple = condition.values.length > 1;
+        let matchCount = 0;
 
         //
         // Conditions are named by user and 'always' a Map type due to Case JSON structure
         // Thus, we should AND them all
         //
 
-        let matched = null;
+        let matched = false;
 
         for (let id in condition.values)
         {
-            const identifier = condition.values[id] as Identifier;
+            const sectionIdentifier = condition.values[id] as Identifier;
 
-            matched = this.filterByIdentifier(json, identifier);
+            matched = this.filterByIdentifier(caseJSON, sectionIdentifier);
+
+            this.logger.debug(`Condition section ${sectionIdentifier.name} match result: ${matched}`);
 
             // If a section fails matching, we should not continue
             if (!matched)
             {
-                return null;
+                return false;
+            }
+            else
+            {
+                matchCount++;
             }
         }
 
@@ -162,7 +167,7 @@ export class SigmaScanner implements ISigmaScanner {
         // If multiple sections are provided we will match the case itself!
         //
 
-        return (multiple) ? json : matched;
+        return matchCount === condition.values.length;
     }
 
     private getModifier(list: Modifier[], modifierValue: ModifierValue): Modifier|null
@@ -177,43 +182,48 @@ export class SigmaScanner implements ISigmaScanner {
         return found;
     }
 
+    private shouldNegate(modifiers: Modifier[])
+    {
+        // We assume there won't be weird negations combined
+        return modifiers.find((m: Modifier) => m.negate === true) !== undefined;
+    }
+
     private matchString(sourceParam: string, targetParam: string, modifiers: Modifier[]): boolean
     {
         const source = sourceParam?.toLowerCase();
         const target = targetParam?.toLowerCase();
 
-        // Check if both equal (even when nullish)
-        if(source === target)
-        {
-            return true;
-        }
-
-        // Check if one is nullish
-        if(!source || !target)
-        {
-            return false;
-        }
-
         let modifier: Modifier = null;
+        let matched = false;
 
-        //TODO(emre): Check for wildcards ? and *
-        if ((modifier = this.getModifier(modifiers, ModifierValue.Contains)) != null)
+        if(source.indexOf('*') >= 0 || source.indexOf('?') >= 0)
         {
-            return target.indexOf(source) >= 0;
+            // Convert wildcard to regex
+            const reWildcard = new RegExp('^' + source.replace(/\*/g, '.*').replace(/\?/g, '.') + '$');
+
+            matched = reWildcard.test(target);
         }
-        else if ((modifier = this.getModifier(modifiers, ModifierValue.StartsWith)) != null)
-        {
-            return target.startsWith(source);
-        }
-        else if ((modifier = this.getModifier(modifiers, ModifierValue.EndsWith)) != null)
-        {
-            return target.endsWith(source);
-        }
-        //TODO(emre): Implement the rest (ordered from left to right)
         else
         {
-            return source === target;
+            if ((modifier = this.getModifier(modifiers, ModifierValue.Contains)) != null)
+            {
+                matched = target?.indexOf(source) >= 0 ?? false;
+            }
+            else if ((modifier = this.getModifier(modifiers, ModifierValue.StartsWith)) != null)
+            {
+                matched = target?.startsWith(source) ?? false;
+            }
+            else if ((modifier = this.getModifier(modifiers, ModifierValue.EndsWith)) != null)
+            {
+                matched = target?.endsWith(source) ?? false;
+            }
+            else
+            {
+                matched = source === target;
+            }
         }
+
+        return (modifier?.negate) ? !matched : matched;
     }
 
     private matchPrimitive(source: Primitive, target: Primitive, modifiers: Modifier[]): boolean
@@ -233,18 +243,15 @@ export class SigmaScanner implements ISigmaScanner {
                 matched = source === target;
         }
 
-        //
-        // Check if we should negate it?
-        // We don't expect more than one to be negated (at least for now)
-        //
+        this.logger.debug(`Source ${source} == Target ${target} = ${matched}`);
 
-        const negate = modifiers.find((m: Modifier) => m.negate === true) !== undefined;
-
-        return (negate) ? !matched : matched;
+        return matched;
     }
 
     private filterByPrimitive(json: any, identifier: Identifier): boolean
     {
+        this.logger.debug(`Filter primitive ${JSON.stringify(json)} => ${JSON.stringify(identifier)}`);
+
         const target = json[identifier.name]; // Check if exists on target json
 
         if (target === undefined)
@@ -252,7 +259,7 @@ export class SigmaScanner implements ISigmaScanner {
             return false;
         }
 
-        const all = identifier.modifiers.find((m:any) => m.value === 'all') != undefined;
+        const all = this.getModifier(identifier.modifiers, ModifierValue.All);
 
         let matchCount = 0;
 
@@ -285,17 +292,19 @@ export class SigmaScanner implements ISigmaScanner {
         return (all) ? matchCount === identifier.values.length : matchCount > 0;
     }
 
-    private filterByIdentifier(json: any, identifier: Identifier): any
+    private filterByIdentifier(json: ObjectLiteral, identifier: Identifier): boolean
     {
         if (!json)
         {
-            return null;
+            this.logger.debug(`Undefined json provided for matching with identifier ${JSON.stringify(identifier)}`);
+            return false;
         }
 
         const target = json[identifier.name];
 
-        if (Array.isArray(target))
+        if (TypeUtils.isArray(target))
         {
+            // JSON property is an array. Recurse for each member
             for (let idx in target)
             {
                 const matched = this.filterByIdentifier(target[idx], identifier);
@@ -307,10 +316,11 @@ export class SigmaScanner implements ISigmaScanner {
                 }
             }
 
-            return null;
+            // None matched, return false
+            return false;
         }
 
-        let matched = null;
+        let matched = false;
 
         for (let i in identifier.values)
         {
@@ -318,19 +328,26 @@ export class SigmaScanner implements ISigmaScanner {
 
             if (currentIdentifier.type === IdentifierType.Primitive)
             {
-                if (this.filterByPrimitive(json, currentIdentifier))
-                {
-                    matched = json;
-                }
+                matched = this.filterByPrimitive(json, currentIdentifier);
             }
             else
             {
                 matched = this.filterByIdentifier(json, currentIdentifier);
             }
 
+            this.logger.debug(`Match result for ${currentIdentifier.name} is ${matched}`);
+
             if (!matched)
             {
-                return null;
+                //
+                // One identifier not matched, let's check the type or 'all' modifier to decide
+                // this should break the chain or not.
+                //
+                if(this.getModifier(identifier.modifiers, ModifierValue.All) ||
+                   identifier.type === IdentifierType.Map)
+                {
+                    return false;
+                }
             }
         }
 
