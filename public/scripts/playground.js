@@ -39,6 +39,16 @@ function setRuleStatus(isValid)
 
 function setMatchResult(isMatched)
 {
+  if(isMatched === null)
+  {
+    $('#match-result').removeClass('alert-danger').removeClass('alert-success')
+    .addClass('alert-warning')
+    .html('Scanning JSON');
+    return;
+  }
+  
+  $('#match-result').removeClass('alert-warning');
+  
   if(isMatched)
   {
     $('#match-result').removeClass('alert-danger')
@@ -58,7 +68,6 @@ function parseRule()
   // Clear for now
   viewJSON(null, '#rule-parsed');
   setRuleStatus(false);
-  setMatchResult(false);
   
   const ruleContent = $('#rule-yaml').val();
   
@@ -67,7 +76,7 @@ function parseRule()
   if(!rule)
   {
     logger.error(`Rule parsing failed`);
-    return;
+    return null;
   }
   
   const conditions = engine.parse(rule);
@@ -75,7 +84,7 @@ function parseRule()
   if(!conditions || conditions.length === 0)
   {
     logger.error(`Condition array is empty`);
-    return;
+    return null;
   }
   
   viewJSON(conditions, '#rule-parsed');
@@ -87,6 +96,8 @@ function parseRule()
   setMatchResult(matched);
   
   logger.info(`Rule parsing succeeded`);
+  
+  return matched;
 }
 
 function loadTemplateRule(name)
@@ -124,7 +135,25 @@ function addTabSupport()
 function initUI()
 {
   $('.dropdown-toggle').dropdown();
-  $('#rule-yaml').on('change keyup paste', parseRule);
+  
+  $('#btn-scan-rule').click(function()
+  {
+    $(this).html('Scanning Rule...').prop('disabled', true);
+    setMatchResult(null);
+    
+    setTimeout(() =>
+    {
+      try
+      {
+        parseRule();
+      }
+      finally
+      {
+        $(this).html('Scan Rule').prop('disabled', false);
+      }
+    }, 500);
+  });
+  
   $('#rule-status').html('Valid Rule');
   
   $('.dropdown-menu a').click(function()
