@@ -65,7 +65,16 @@ describe('Detection', () =>
         expect(detection.expandCondition()).toEqual(detection.condition);
     });
 
-    test('"any of them" statement should be expanded correctly', () =>
+    test('"any of them" statement should be expanded correctly for a single condition', () =>
+    {
+        const detection:Detection = new Detection();
+        detection.cond1 = {process: 'test1.exe'};
+        detection.condition = 'any of them';
+
+        expect(detection.expandCondition()).toEqual('(cond1)');
+    });
+
+    test('"any of them" statement should be expanded correctly for multiple conditions', () =>
     {
         const detection:Detection = new Detection();
         detection.cond1 = {process: 'test1.exe'};
@@ -75,7 +84,16 @@ describe('Detection', () =>
         expect(detection.expandCondition()).toEqual('(cond1 or cond2)');
     });
 
-    test('"all of them" statement should be expanded correctly', () =>
+    test('"all of them" statement should be expanded correctly for a single condition', () =>
+    {
+        const detection:Detection = new Detection();
+        detection.cond1 = {process: 'test1.exe'};
+        detection.condition = 'all of them';
+
+        expect(detection.expandCondition()).toEqual('(cond1)');
+    });
+
+    test('"all of them" statement should be expanded correctly for multiple conditions', () =>
     {
         const detection:Detection = new Detection();
         detection.cond1 = {process: 'test1.exe'};
@@ -125,7 +143,7 @@ describe('Detection', () =>
         detection.cond3 = {sub1:{process: 'test3.exe'}, sub2:{process: 'test3.exe'}};
         detection.condition = '(2 of cond1) or (1 of cond2)';
 
-        expect(detection.expandCondition()).toEqual("(((cond1.sub1 and cond1.sub2))) or (((cond2.sub1) or (cond2.sub2)))");
+        expect(detection.expandCondition()).toEqual("((cond1.sub1 and cond1.sub2)) or (((cond2.sub1) or (cond2.sub2)))");
     });
 
     test('"N of condition" statement should fail for invalid group', () =>

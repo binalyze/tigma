@@ -12,6 +12,8 @@ import {Identifier} from "../rule/identifier";
 @injectable()
 export class Engine implements IEngine
 {
+    private options: IEngineOptions = {};
+
     constructor(
        @inject(DI.ILoggerService) private readonly logger: ILoggerService,
        @inject(DI.ISigmaLoader) private readonly loader: ISigmaLoader,
@@ -22,7 +24,7 @@ export class Engine implements IEngine
 
     init(options: IEngineOptions): void
     {
-
+        this.options = options;
     }
 
     load(ruleContent: string): SigmaRule|null

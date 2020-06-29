@@ -1,6 +1,6 @@
 import {DI} from "../../../container.types";
 import {ISigmaLoader} from "./sigma-loader.interface";
-import {configureTestContainer, testContainer} from "../../../../test/container.bindings";
+import {configureTestContainer} from "../../../../test/container.bindings";
 import {Container} from "inversify";
 import {SigmaLoader} from "./sigma-loader.service";
 import * as fs from "fs";
@@ -20,7 +20,7 @@ describe('Sigma Loader', () =>
         container = configureTestContainer();
         container.bind(DI.ISigmaLoader).to(SigmaLoader);
 
-        sigmaLoader = testContainer.get(DI.ISigmaLoader);
+        sigmaLoader = container.get(DI.ISigmaLoader);
     });
 
     test('Should throw exception for empty files', () =>

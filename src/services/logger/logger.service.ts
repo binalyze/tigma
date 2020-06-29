@@ -18,12 +18,12 @@ export class LoggerService implements ILoggerService
             return;
         }
 
-        console.log(`Binalyze DEBUG: ${message}`);
+        console.debug(`Binalyze DEBUG: ${message}`);
     }
 
     info(message: string): void
     {
-        console.log(`Binalyze INFO: ${message}`);
+        console.info(`Binalyze INFO: ${message}`);
     }
 
     warn(message: string): void

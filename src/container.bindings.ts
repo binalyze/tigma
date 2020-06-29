@@ -10,9 +10,7 @@ import {ILoggerService} from "./services/logger/logger.service.interface";
 import {IEngine} from "./engine/engine.interface";
 import {Engine} from "./engine/engine";
 
-const container: Container = new Container();
-
-function setDefaultBindings()
+export function setDefaultBindings(container: Container): void
 {
     container.bind<IEngine>(DI.IEngine).to(Engine);
     container.bind<ISigmaLoader>(DI.ISigmaLoader).to(SigmaLoader);
@@ -21,13 +19,15 @@ function setDefaultBindings()
 
 export function configureContainer(options?: IContainerOptions): Container
 {
+    const container: Container = new Container();
+
     if(options?.logger) {
         container.bind<ILoggerService>(DI.ILoggerService).toConstantValue(options.logger);
     } else {
         container.bind<ILoggerService>(DI.ILoggerService).toConstantValue(new LoggerService());
     }
 
-    setDefaultBindings();
+    setDefaultBindings(container);
 
     return container;
 }
