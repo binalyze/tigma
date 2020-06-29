@@ -20,5 +20,5 @@ steps:
   displayName: 'NPM Install'
 
 - script: |
-    npm run test
+    npm run test:pipeline
   displayName: 'Run Tests'
