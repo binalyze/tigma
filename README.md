@@ -1,5 +1,7 @@
 [![Tigma](https://binalyze.github.io/tigma/public/header-image.png "Sigma + TypeScript = Tigma")](#)
 
+[![Build Status](https://binalyze.visualstudio.com/Binalyze.Tigma/_apis/build/status/Binalyze.Tigma?branchName=master)](https://binalyze.visualstudio.com/Binalyze.Tigma/_build/latest?definitionId=11&branchName=master)
+
 # Tigma
 Tigma is a fully compliant library for loading, parsing, and validating Sigma rules in a JS environment (browser or node). This enables Sigma to reach even further by opening up new platforms supporting Javascript (almost anything out there). 
 

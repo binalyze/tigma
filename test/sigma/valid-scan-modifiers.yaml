@@ -24,6 +24,6 @@ detection:
       UserName|all:
         - '*SYSTEM*'
         - '*NT*'
-        - '*LAST BOMB HERE WHICH WILL MAKE IT FAIL*'
+        - '*THIS WILL MAKE IT FAIL*'
   condition:  any of them
   timeframe: '5w'

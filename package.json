@@ -15,6 +15,7 @@
     "rimraf": "rm -rf js",
     "clean": "tsc --build --clean",
     "test:pipeline": "npm run build:ts && jest",
+    "test:coverage": "npm run build:ts && jest --coverage --coverageReporters=cobertura",
     "test": "npm run build:ts && jest --watch"
   },
   "dependencies": {
