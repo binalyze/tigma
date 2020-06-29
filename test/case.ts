@@ -155,6 +155,7 @@ export const testCaseJSON: ObjectLiteral = {
             "SessionId": 0,
             "Object": -50013975158656,
             "PEB": 308512346112,
+            "NullProperty": null,
             "BaseAddress": 140700783017984,
             "CreationTime": "2020-03-06 12:58:34",
             "Is32Bit": false,

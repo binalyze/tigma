@@ -1,0 +1,19 @@
+action: global
+title: Valid Rule
+description: Scan rule
+references:
+  - http://binalyze.com
+author: Emre TINAZTEPE
+logsource:
+  os: windows
+  category: case
+  product: air
+level: medium
+tags:
+  - attack.358
+detection:
+  selection:
+    Processes:
+      NotExisting: some value
+  condition:  any of them
+  timeframe: '5w'

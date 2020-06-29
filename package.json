@@ -1,6 +1,6 @@
 {
   "name": "@binalyze/tigma",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "main": "dist/tigma.js",
   "scripts": {
     "build:ts": "tsc --build tsconfig.json",
@@ -77,10 +77,10 @@
     "modulePathIgnorePatterns": [],
     "coverageThreshold": {
       "global": {
-        "statements": 95,
-        "branches": 95,
-        "functions": 95,
-        "lines": 95
+        "statements": 90,
+        "branches": 90,
+        "functions": 90,
+        "lines": 90
       }
     }
   }

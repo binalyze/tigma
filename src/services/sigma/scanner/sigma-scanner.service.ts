@@ -25,78 +25,79 @@ export class SigmaScanner implements ISigmaScanner {
 
         let expression: any;
 
-        try
-        {
-            const detection: Detection = rule.detection;
+        const detection: Detection = rule.detection;
 
-            const conditions = detection.getConditionNames();
-            const expandedCondition = detection.expandCondition();
+        const conditions = detection.getConditionNames();
+        const expandedCondition = detection.expandCondition();
 
-            this.logger.debug(`Expression: ${rule.detection.condition}, Expanded: ${expandedCondition}, Conditions: ${conditions}`);
+        this.logger.debug(`Expression: ${rule.detection.condition}, Expanded: ${expandedCondition}, Conditions: ${conditions}`);
 
-            const options = {
-                extraFunctions: {
-                    evaluateCondition: (conditionName:string) => self.evaluateCondition(rule, conditionName, json)
-                }
-            };
-
-            //
-            // Replace condition specifiers with lazyEvaluate so that we can take control
-            // on each condition execution
-            //
-            let lazyConditionExpression = expandedCondition;
-
-            for(let i in conditions)
-            {
-                const c = conditions[i];
-
-                this.logger.debug(`Converting condition ${c} to lazy evaluator`);
-
-                //
-                // We have the condition group here. Possibilities are:
-                // - selection
-                // - selection.cond1
-                //
-
-                const reDotAccessorPattern = `(${c}\\.\\w+)`;
-                const reGroupCondition =  new RegExp(reDotAccessorPattern);
-
-                if(reGroupCondition.test(lazyConditionExpression))
-                {
-                    const reGlobal = new RegExp(reDotAccessorPattern, 'g');
-
-                    const matches = lazyConditionExpression.match(reGlobal);
-
-                    matches.forEach((m:string) => {
-                        lazyConditionExpression = lazyConditionExpression.replace(m, `evaluateCondition("${m}")`);
-                    });
-                }
-                else
-                {
-                    lazyConditionExpression = lazyConditionExpression.replace(c, `evaluateCondition("${c}")`);
-                }
+        const options = {
+            extraFunctions: {
+                evaluateCondition: (conditionName:string) => self.evaluateCondition(rule, conditionName, json)
             }
+        };
 
-            this.logger.debug(`Re-written rule for lazy evaluation: ${lazyConditionExpression}`);
+        //
+        // Replace condition specifiers with lazyEvaluate so that we can take control
+        // on each condition execution
+        //
+        let lazyConditionExpression = expandedCondition;
 
-            /**
-             * Filtrex only has 2 types and arrays of these:
-             * - Number
-             * - String
-             */
-            expression = compileExpression(lazyConditionExpression, options);
-
-            const result = expression(json);
-
-            this.logger.debug(`Rule '${rule.title}' detection result: ${result}`);
-
-            return result;
-        }
-        catch (e)
+        for(let i in conditions)
         {
-            this.logger.error(`Exception compiling condition ${rule.detection.condition}: ${e.message}`);
+            const c = conditions[i];
+
+            this.logger.debug(`Converting condition ${c} to lazy evaluator`);
+
+            //
+            // We have the condition group here. Possibilities are:
+            // - selection
+            // - selection.cond1
+            //
+
+            const reDotAccessorPattern = `(${c}\\.\\w+)`;
+            const reGroupCondition =  new RegExp(reDotAccessorPattern);
+
+            if(reGroupCondition.test(lazyConditionExpression))
+            {
+                const reGlobal = new RegExp(reDotAccessorPattern, 'g');
+
+                const matches = lazyConditionExpression.match(reGlobal);
+
+                matches.forEach((m:string) => {
+                    lazyConditionExpression = lazyConditionExpression.replace(m, `evaluateCondition("${m}")`);
+                });
+            }
+            else
+            {
+                lazyConditionExpression = lazyConditionExpression.replace(c, `evaluateCondition("${c}")`);
+            }
+        }
+
+        this.logger.debug(`Re-written rule for lazy evaluation: ${lazyConditionExpression}`);
+
+        if(lazyConditionExpression.indexOf('evaluateCondition') === -1)
+        {
+            this.logger.error(`Lazy condition looks erroneous due to the lack of lazy evaluation function: ${lazyConditionExpression}`);
             return false;
         }
+
+        /**
+         * Filtrex only has 2 types and arrays of these:
+         * - Number
+         * - String
+         */
+        expression = compileExpression(lazyConditionExpression, options);
+
+        const result = expression(json);
+
+        this.logger.debug(`Rule '${rule.title}' detection result: ${result}`);
+
+        //
+        // Filtrex: For single conditions result is true, for multiple groups it will return 1
+        //
+        return result === true || result === 1;
     }
 
     //#region Utilities
@@ -109,21 +110,9 @@ export class SigmaScanner implements ISigmaScanner {
 
         let condition: Record<string, object> = (rule.detection as any)[group];
 
-        if(condition === undefined)
-        {
-            this.logger.error(`Rule ${rule.description} doesn't have a condition named ${conditionName}`);
-            return false;
-        }
-
         if(child)
         {
             condition = condition[child] as Record<string, object>;
-        }
-
-        if(condition === undefined)
-        {
-            this.logger.error(`Rule ${rule.description} doesn't have a condition named ${conditionName}`);
-            return false;
         }
 
         const identifierTree = new Identifier(conditionName, condition);

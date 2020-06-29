@@ -1,0 +1,20 @@
+action: global
+title: Valid Rule
+description: Scan rule
+references:
+  - http://binalyze.com
+author: Emre TINAZTEPE
+logsource:
+  os: windows
+  category: case
+  product: air
+level: medium
+tags:
+  - attack.358
+detection:
+  selection:
+    Processes:
+      Name: invalid.exe
+      CommandLine|contains: can not found this
+  condition:  any of selection
+  timeframe: '5w'
