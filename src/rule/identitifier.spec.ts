@@ -47,9 +47,9 @@ describe('Identifier', () =>
         expect(value.name).toBe('Name');
         expect(value.type).toBe(IdentifierType.Primitive);
         expect(value.modifiers).toHaveLength(2);
-        expect(value.modifiers[0].value).toBe('base64');
+        expect(value.modifiers[0].type).toBe('base64');
         expect(value.modifiers[0].negate).toBe(false);
-        expect(value.modifiers[1].value).toBe('contains');
+        expect(value.modifiers[1].type).toBe('contains');
         expect(value.modifiers[1].negate).toBe(true);
         expect(value.values).toContain('process.exe');
     });

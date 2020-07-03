@@ -9,7 +9,7 @@ import {Modifier} from "../../../rule/modifier";
 import {IdentifierType} from "../../../rule/identifier-type.enum";
 import {Detection} from "../../../rule/detection";
 import {ObjectLiteral} from "../../../types/object-literal";
-import {ModifierValue} from "../../../rule/modifier-value.enum";
+import {ModifierType} from "../../../rule/modifier-type.enum";
 import {TypeUtils} from "../../../utils/type-utils";
 
 @injectable()
@@ -159,9 +159,9 @@ export class SigmaScanner implements ISigmaScanner {
         return matchCount === condition.values.length;
     }
 
-    private getModifier(list: Modifier[], modifierValue: ModifierValue): Modifier|null
+    private getModifier(list: Modifier[], modifierValue: ModifierType): Modifier|null
     {
-        const found = list.find((m:Modifier) => m.value === modifierValue);
+        const found = list.find((m:Modifier) => m.type === modifierValue);
 
         if(!found)
         {
@@ -194,21 +194,26 @@ export class SigmaScanner implements ISigmaScanner {
         }
         else
         {
-            if ((modifier = this.getModifier(modifiers, ModifierValue.Contains)) != null)
+            if ((modifier = this.getModifier(modifiers, ModifierType.Contains)) != null)
             {
                 matched = target?.indexOf(source) >= 0 ?? false;
             }
-            else if ((modifier = this.getModifier(modifiers, ModifierValue.StartsWith)) != null)
+            else if ((modifier = this.getModifier(modifiers, ModifierType.StartsWith)) != null)
             {
                 matched = target?.startsWith(source) ?? false;
             }
-            else if ((modifier = this.getModifier(modifiers, ModifierValue.EndsWith)) != null)
+            else if ((modifier = this.getModifier(modifiers, ModifierType.EndsWith)) != null)
             {
                 matched = target?.endsWith(source) ?? false;
             }
-            else if((modifier = this.getModifier(modifiers, ModifierValue.Equals)) != null)
+            else if((modifier = this.getModifier(modifiers, ModifierType.Equals)) != null ||
+                    (modifier = this.getModifier(modifiers, ModifierType.Eq)) != null)
             {
                 matched = source === target;
+            }
+            else if ((modifier = this.getModifier(modifiers, ModifierType.Re)) != null)
+            {
+                //TODO(emre): Implement regex matching here
             }
             else
             {
@@ -219,9 +224,33 @@ export class SigmaScanner implements ISigmaScanner {
         return matched;
     }
 
-    private matchNumber(source: number, target: number): boolean
+    private matchNumber(source: number, target: number, modifiers: Modifier[]): boolean
     {
-        return source === target;
+        let modifier: Modifier = null;
+        let matched = false;
+
+        if ((modifier = this.getModifier(modifiers, ModifierType.LessThan)) != null)
+        {
+            matched = target < source;
+        }
+        else if ((modifier = this.getModifier(modifiers, ModifierType.LessThanOrEqual)) != null)
+        {
+            matched = target <= source;
+        }
+        else if ((modifier = this.getModifier(modifiers, ModifierType.GreaterThan)) != null)
+        {
+            matched = target > source;
+        }
+        else if ((modifier = this.getModifier(modifiers, ModifierType.GreaterThanOrEqual)) != null)
+        {
+            matched = target >= source;
+        }
+        else
+        {
+            matched = source === target;
+        }
+
+        return matched;
     }
 
     private matchBoolean(source: boolean, target: boolean): boolean
@@ -240,7 +269,7 @@ export class SigmaScanner implements ISigmaScanner {
                 matched = this.matchString(source as string, target as string, modifiers);
                 break;
             case "number":
-                matched = this.matchNumber(source as number, target as number);
+                matched = this.matchNumber(source as number, target as number, modifiers);
                 break;
             case "boolean":
                 matched = this.matchBoolean(source as boolean, target as boolean);
@@ -264,7 +293,7 @@ export class SigmaScanner implements ISigmaScanner {
             return false;
         }
 
-        const all = this.getModifier(identifier.modifiers, ModifierValue.All);
+        const all = this.getModifier(identifier.modifiers, ModifierType.All);
 
         let matchCount = 0;
 
@@ -348,7 +377,7 @@ export class SigmaScanner implements ISigmaScanner {
                 // One identifier not matched, let's check the type or 'all' modifier to decide
                 // this should break the chain or not.
                 //
-                if(this.getModifier(identifier.modifiers, ModifierValue.All) ||
+                if(this.getModifier(identifier.modifiers, ModifierType.All) ||
                    identifier.type === IdentifierType.Map)
                 {
                     return false;

@@ -1,6 +1,6 @@
 {
   "name": "@binalyze/tigma",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "dist/tigma.js",
   "scripts": {
     "build:ts": "tsc --build tsconfig.json",
@@ -15,7 +15,8 @@
     "rimraf": "rm -rf js",
     "clean": "tsc --build --clean",
     "test:pipeline": "npm run build:ts && jest --coverage --coverageReporters=cobertura",
-    "test": "npm run build:ts && jest --watch"
+    "test": "npm run build:ts && jest --watch",
+    "test:cov": "npm run build:ts && jest --coverage"
   },
   "dependencies": {
     "@types/yaml": "^1.9.7",
