@@ -11,11 +11,11 @@
     "start:dev": "npm run build:webpack:debug && webpack-dev-server",
     "start": "tsc --build tsconfig.json && node ./dist/main.js",
     "prepublishOnly": "npm run build:release",
-    "push:github": "git push -f github master",
+    "push": "git push -f github master && git push -f origin master",
     "rimraf": "rm -rf js",
     "clean": "tsc --build --clean",
     "test:pipeline": "npm run build:ts && jest --coverage --coverageReporters=cobertura",
-    "test": "npm run build:ts && jest --watch",
+    "test": "npm run build:ts && jest --watchAll",
     "test:cov": "npm run build:ts && jest --coverage"
   },
   "dependencies": {

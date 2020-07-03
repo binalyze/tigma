@@ -9,21 +9,30 @@ export class Modifier
     {
         this.negate = modifier.indexOf('!') == 0;
 
-        this.type = ((this.negate) ? modifier.substring(1) : modifier) as ModifierType;
+        const typeName = ((this.negate) ? modifier.substring(1) : modifier);
+
+        if(!Object.values(ModifierType).includes(typeName as ModifierType))
+        {
+            throw new Error(`Unsupported modifier provided: ${typeName}`);
+        }
+
+        this.type = typeName as ModifierType;
     }
 
-    static extractIdentifiers(identifier: string): Modifier[]
+    static extractModifiers(identifier: string): Modifier[]
     {
         const parts = identifier.split('|');
 
-        const modifiers = parts.splice(1); // Skip the first part
+        const modifiers = parts.splice(1); // Skip the first part which is name
 
         const list: Modifier[] = [];
 
-        modifiers.forEach(m =>
+        for(let i in modifiers)
         {
-           list.push(new Modifier(m));
-        });
+            const m = modifiers[i];
+
+            list.push(new Modifier(m));
+        }
 
         return list;
     }

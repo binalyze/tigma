@@ -25,7 +25,7 @@ export class Identifier
 
         this.type = Identifier.getIdentifierType(value);
 
-        this.modifiers = Modifier.extractIdentifiers(identifier);
+        this.modifiers = Modifier.extractModifiers(identifier);
 
         this.values = [];
 

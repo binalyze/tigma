@@ -1,9 +1,10 @@
 import {Identifier, IdentifierValue} from "./identifier";
 import {IdentifierType} from "./identifier-type.enum";
+import {ModifierType} from "./modifier-type.enum";
 
 describe('Identifier', () =>
 {
-    const Constraint = {
+    const IdentifierObj = {
         "Process[]": {
             "Name|base64|!contains": "process.exe",
             "Module": {
@@ -25,10 +26,10 @@ describe('Identifier', () =>
 
     test('Loading a valid identifier should succeed', () =>
     {
-        const identifier = new Identifier('Constraint', Constraint);
+        const identifier = new Identifier('Identifier', IdentifierObj);
 
-        expect(identifier.key).toBe('Constraint');
-        expect(identifier.name).toBe('Constraint');
+        expect(identifier.key).toBe('Identifier');
+        expect(identifier.name).toBe('Identifier');
         expect(identifier.type).toBe(IdentifierType.Map);
         expect(identifier.modifiers).toHaveLength(0);
         expect(identifier.values).toHaveLength(2);
@@ -36,20 +37,20 @@ describe('Identifier', () =>
 
     test('Modifier parsing should should succeed', () =>
     {
-        const identifier = new Identifier('Constraint', Constraint);
+        const identifier = new Identifier(ModifierType.Equals, IdentifierObj);
 
         const childIdentifier = identifier.values[0] as Identifier;
         const values = childIdentifier.values as Identifier[];
 
         const value = values[0];
 
-        expect(value.key).toBe('Name|base64|!contains');
+        expect(value.key).toBe(`Name|${ModifierType.Base64}|!${ModifierType.Contains}`);
         expect(value.name).toBe('Name');
         expect(value.type).toBe(IdentifierType.Primitive);
         expect(value.modifiers).toHaveLength(2);
-        expect(value.modifiers[0].type).toBe('base64');
+        expect(value.modifiers[0].type).toBe(ModifierType.Base64);
         expect(value.modifiers[0].negate).toBe(false);
-        expect(value.modifiers[1].type).toBe('contains');
+        expect(value.modifiers[1].type).toBe(ModifierType.Contains);
         expect(value.modifiers[1].negate).toBe(true);
         expect(value.values).toContain('process.exe');
     });

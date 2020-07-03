@@ -284,8 +284,6 @@ export class SigmaScanner implements ISigmaScanner {
 
     private filterByPrimitive(json: any, identifier: Identifier): boolean
     {
-        this.logger.debug(`Filter primitive ${JSON.stringify(json)} => ${JSON.stringify(identifier)}`);
-
         const target = json[identifier.name]; // Check if exists on target json
 
         if (target === undefined)
@@ -377,8 +375,7 @@ export class SigmaScanner implements ISigmaScanner {
                 // One identifier not matched, let's check the type or 'all' modifier to decide
                 // this should break the chain or not.
                 //
-                if(this.getModifier(identifier.modifiers, ModifierType.All) ||
-                   identifier.type === IdentifierType.Map)
+                if(this.getModifier(identifier.modifiers, ModifierType.All) || identifier.type === IdentifierType.Map)
                 {
                     return false;
                 }

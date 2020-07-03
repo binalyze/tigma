@@ -1,5 +1,6 @@
 export enum ModifierType
 {
+    // ---------------- Operators ------------------
     All = 'all',
     Contains = 'contains',
     EndsWith = 'endswith',
@@ -11,4 +12,7 @@ export enum ModifierType
     GreaterThanOrEqual = 'gte',
     LessThan = 'lt',
     LessThanOrEqual = 'lte',
+
+    // ---------------- Transformers ------------------
+    Base64 = 'base64', //TODO(emre): Implement this
 }

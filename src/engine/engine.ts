@@ -44,12 +44,14 @@ export class Engine implements IEngine
 
         const names = rule.detection.getConditionNames();
 
-        names.forEach(n =>
+        for(let i in names)
         {
-            const tree = new Identifier(n, rule.detection.getConditionByName(n));
+            const name = names[i];
+
+            const tree = new Identifier(name, rule.detection.getConditionByName(name));
 
             list.push(tree);
-        });
+        }
 
         return list;
     }

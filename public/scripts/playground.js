@@ -79,15 +79,15 @@ function parseRule()
     return null;
   }
   
-  const conditions = engine.parse(rule);
+  const rootIdentifier = engine.parse(rule);
   
-  if(!conditions || conditions.length === 0)
+  if(!rootIdentifier || rootIdentifier.length === 0)
   {
-    logger.error(`Condition array is empty`);
+    logger.error(`Parsing rule failed`);
     return null;
   }
   
-  viewJSON(conditions, '#rule-parsed');
+  viewJSON(rootIdentifier, '#rule-parsed');
   
   setRuleStatus(true);
   

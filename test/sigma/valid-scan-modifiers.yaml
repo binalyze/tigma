@@ -20,10 +20,13 @@ detection:
       Publisher|equals: Microsoft Windows Publisher
       Is32Bit: false
       FileSize: 18144
+      FileSize|lt: 18145
+      FileSize|gt: 18143
+      FileSize|lte: 18145
+      FileSize|gte: 18143
       NullProperty: null
       UserName|all:
         - '*SYSTEM*'
         - '*NT*'
-        - '*THIS WILL MAKE IT FAIL*'
   condition:  any of them
   timeframe: '5w'

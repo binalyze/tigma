@@ -106,7 +106,7 @@ describe('Sigma Scanner', () =>
         const rule = loader.load(content);
 
         const result = scanner.scan(rule, testCaseJSON);
-        expect(result).toBe(false);
+        expect(result).toBe(true);
     });
 
     test('Invalid property matching', () =>
@@ -130,6 +130,18 @@ describe('Sigma Scanner', () =>
         const rule = loader.load(content);
 
         const result = scanner.scan(rule, null);
+        expect(result).toBe(false);
+    });
+
+    test('Failing one item should fail when "all" modifier is in use', () =>
+    {
+        const filePath = path.resolve(yamlDir, "all-modifier.yaml");
+        const content = fs.readFileSync(filePath, "utf8");
+
+        const loader = container.get<ISigmaLoader>(DI.ISigmaLoader);
+        const rule = loader.load(content);
+
+        const result = scanner.scan(rule, testCaseJSON);
         expect(result).toBe(false);
     });
 });
