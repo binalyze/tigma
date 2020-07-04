@@ -29,10 +29,10 @@ describe('Sigma Loader', () =>
         expect(rule).toBeNull();
     });
 
-    test('Should throw exception for invalid YAML files', () =>
+    test('Should return null for invalid YAML files', () =>
     {
-        const rule = sigmaLoader.load('some invalid');
-        expect(rule).toBeNull();
+        const rules = sigmaLoader.load('some invalid');
+        expect(rules).toBeNull();
     });
 
     test('Should succeed for Minimal Sigma file', () =>
@@ -65,12 +65,12 @@ describe('Sigma Loader', () =>
         expect(rules).toBeNull();
     });
 
-    test('Should fail for multiple document files', () =>
+    test('Should succeed for multiple document files', () =>
     {
         const filePath = path.resolve(yamlDir, "valid-multiple.yaml");
         const ruleContent = fs.readFileSync(filePath, "utf8");
 
         const rules: SigmaRule[] = sigmaLoader.load(ruleContent);
-        expect(rules[0]).toBeNull();
+        expect(rules).not.toBeNull();
     });
 });

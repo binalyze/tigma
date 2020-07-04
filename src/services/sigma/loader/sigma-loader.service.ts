@@ -34,6 +34,12 @@ export class SigmaLoader implements ISigmaLoader
             return null;
         }
 
+        if(!json)
+        {
+            this.logger.error(`YAML parsing returned nullish result for ${ruleContent}`);
+            return null;
+        }
+
         if(TypeUtils.isArray(json))
         {
             let globalDocument: ObjectLiteral = null;
@@ -82,6 +88,11 @@ export class SigmaLoader implements ISigmaLoader
         {
             const rule = this.jsonToRule(json);
 
+            if(!rule)
+            {
+                return null;
+            }
+
             rules.push(rule);
         }
 
@@ -91,6 +102,12 @@ export class SigmaLoader implements ISigmaLoader
     private jsonToRule(json: any): SigmaRule|null
     {
         let rule: SigmaRule = plainToClass(SigmaRule, json);
+
+        if(typeof rule !== 'object')
+        {
+            this.logger.error(`Rule parsing returned with unexpected type: ${typeof rule}`);
+            return null;
+        }
 
         const errors = validateSync(rule);
 

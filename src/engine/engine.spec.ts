@@ -69,7 +69,7 @@ describe('Engine', () =>
         const rules = engine.load(ruleContent);
         expect(rules).toBe(null);
 
-        expect(spy.mock.calls[0][0]).toContain('unexpected result');
+        expect(spy.mock.calls[0][0]).toContain('unexpected');
 
         spy.mockClear();
     });

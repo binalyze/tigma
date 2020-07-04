@@ -16,6 +16,8 @@ function createEngine(options?: IEngineOptions): IEngine
 
   logger.info(`CreateEngine succeeded`);
 
+  engine.load('an-invalid-rule');
+
   return engine;
 }
 
