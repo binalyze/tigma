@@ -11,4 +11,9 @@ export class TypeUtils
 
         return (value === null || ["string", "number", "boolean"].indexOf(type) >= 0);
     }
+
+    public static deepCopy<T>(source: T)
+    {
+        return JSON.parse(JSON.stringify(source));
+    }
 }

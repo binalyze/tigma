@@ -19,7 +19,23 @@ export class SigmaScanner implements ISigmaScanner {
 
     }
 
-    public scan(rule: SigmaRule, json: ObjectLiteral) : boolean
+    public scan(rules: SigmaRule[], json: ObjectLiteral) : boolean
+    {
+        for (let i in rules)
+        {
+            const rule = rules[i];
+
+            if(this.scanRule(rule, json))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //#region Utilities
+    private scanRule(rule: SigmaRule, json: ObjectLiteral) : boolean
     {
         const self = this;
 
@@ -100,7 +116,6 @@ export class SigmaScanner implements ISigmaScanner {
         return result === true || result === 1;
     }
 
-    //#region Utilities
     private evaluateCondition(rule: SigmaRule, conditionName: string, json: ObjectLiteral): boolean
     {
         this.logger.debug(`Running condition: ${JSON.stringify(conditionName)}`);

@@ -71,27 +71,29 @@ function parseRule()
   
   const ruleContent = $('#rule-yaml').val();
   
-  const rule = engine.load(ruleContent);
+  const rules = engine.load(ruleContent);
   
-  if(!rule)
+  logger.debug(`Engine.load count: ${rules.length} result: ${JSON.stringify(rules)}`);
+  
+  if(!rules)
   {
     logger.error(`Rule parsing failed`);
     return null;
   }
   
-  const rootIdentifier = engine.parse(rule);
+  const identifiers = engine.parse(rules);
   
-  if(!rootIdentifier || rootIdentifier.length === 0)
+  if(!identifiers || identifiers.length === 0)
   {
     logger.error(`Parsing rule failed`);
     return null;
   }
   
-  viewJSON(rootIdentifier, '#rule-parsed');
+  viewJSON(identifiers, '#rule-parsed');
   
   setRuleStatus(true);
   
-  const matched = engine.scan(rule, caseJSON);
+  const matched = engine.scan(rules, caseJSON);
   
   setMatchResult(matched);
   

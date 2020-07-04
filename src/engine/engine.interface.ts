@@ -6,7 +6,7 @@ import {Identifier} from "../rule/identifier";
 export interface IEngine
 {
     init(options: IEngineOptions): void;
-    load(ruleContent: string): SigmaRule;
-    parse(rule: SigmaRule): Identifier[];
-    scan(rule: SigmaRule, json: ObjectLiteral): boolean;
+    load(ruleContent: string): SigmaRule[];
+    parse(rules: SigmaRule[]): Identifier[];
+    scan(rules: SigmaRule[], json: ObjectLiteral): boolean;
 }

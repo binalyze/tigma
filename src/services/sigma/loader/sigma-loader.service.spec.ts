@@ -40,10 +40,10 @@ describe('Sigma Loader', () =>
         const filePath = path.resolve(yamlDir, "valid-rule-minimal.yaml");
         const ruleContent = fs.readFileSync(filePath, "utf8");
 
-        const rule: SigmaRule = sigmaLoader.load(ruleContent);
-        expect(rule.title).toBe('Minimal Rule');
-        expect(rule.detection).toBeInstanceOf(Detection);
-        expect(rule.logsource).toBeInstanceOf(LogSource);
+        const rules: SigmaRule[] = sigmaLoader.load(ruleContent);
+        expect(rules[0].title).toBe('Minimal Rule');
+        expect(rules[0].detection).toBeInstanceOf(Detection);
+        expect(rules[0].logsource).toBeInstanceOf(LogSource);
     });
 
     test('Should succeed for a valid Sigma file', () =>
@@ -51,9 +51,9 @@ describe('Sigma Loader', () =>
         const filePath = path.resolve(yamlDir, "valid-rule.yaml");
         const ruleContent = fs.readFileSync(filePath, "utf8");
 
-        const rule = sigmaLoader.load(ruleContent);
-        expect(rule.title).toBe('Valid Rule');
-        expect(rule.description).toBe('Just a sample valid rule');
+        const rules = sigmaLoader.load(ruleContent);
+        expect(rules[0].title).toBe('Valid Rule');
+        expect(rules[0].description).toBe('Just a sample valid rule');
     });
 
     test('Should fail when a required property not present', () =>
@@ -61,8 +61,8 @@ describe('Sigma Loader', () =>
         const filePath = path.resolve(yamlDir, "valid-rule-missing-property.yaml");
         const ruleContent = fs.readFileSync(filePath, "utf8");
 
-        const rule: SigmaRule = sigmaLoader.load(ruleContent);
-        expect(rule).toBeNull();
+        const rules: SigmaRule[] = sigmaLoader.load(ruleContent);
+        expect(rules).toBeNull();
     });
 
     test('Should fail for multiple document files', () =>
@@ -70,7 +70,7 @@ describe('Sigma Loader', () =>
         const filePath = path.resolve(yamlDir, "valid-multiple.yaml");
         const ruleContent = fs.readFileSync(filePath, "utf8");
 
-        const rule: SigmaRule = sigmaLoader.load(ruleContent);
-        expect(rule).toBeNull();
+        const rules: SigmaRule[] = sigmaLoader.load(ruleContent);
+        expect(rules[0]).toBeNull();
     });
 });

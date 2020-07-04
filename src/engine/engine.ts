@@ -8,6 +8,7 @@ import {IEngineOptions} from "./engine-opts.interface";
 import {ISigmaLoader} from "../services/sigma/loader/sigma-loader.interface";
 import {ISigmaScanner} from "../services/sigma/scanner/sigma-scanner.interface";
 import {Identifier} from "../rule/identifier";
+import {TypeUtils} from "../utils/type-utils";
 
 @injectable()
 export class Engine implements IEngine
@@ -27,7 +28,7 @@ export class Engine implements IEngine
         this.options = options;
     }
 
-    load(ruleContent: string): SigmaRule|null
+    load(ruleContent: string): SigmaRule[]|null
     {
         if(!ruleContent || ruleContent.length === 0)
         {
@@ -38,7 +39,28 @@ export class Engine implements IEngine
         return this.loader.load(ruleContent);
     }
 
-    parse(rule: SigmaRule): Identifier[]
+    parse(rules: SigmaRule[]): Identifier[]
+    {
+        const list: Identifier[] = [];
+
+        for(let i in rules)
+        {
+            const rule = rules[i];
+
+            const identifiers = this.parseRule(rule);
+
+            list.push(...identifiers);
+        }
+
+        return list;
+    }
+
+    scan(rules: SigmaRule[], json: ObjectLiteral): boolean
+    {
+        return this.scanner.scan(rules, json);
+    }
+
+    private parseRule(rule: SigmaRule): Identifier[]
     {
         const list: Identifier[] = [];
 
@@ -54,10 +76,5 @@ export class Engine implements IEngine
         }
 
         return list;
-    }
-
-    scan(rule: SigmaRule, json: ObjectLiteral): boolean
-    {
-        return this.scanner.scan(rule, json);
     }
 }

@@ -6,6 +6,10 @@ import {ILoggerService} from "../../logger/logger.service.interface";
 import {ISigmaLoader} from "./sigma-loader.interface";
 import {validateSync} from "class-validator";
 import {plainToClass} from "class-transformer";
+import {TypeUtils} from "../../../utils/type-utils";
+import {ObjectLiteral} from "../../../types/object-literal";
+import {Action} from "../../../rule/action.enum";
+import * as _ from "lodash";
 
 @injectable()
 export class SigmaLoader implements ISigmaLoader
@@ -14,13 +18,15 @@ export class SigmaLoader implements ISigmaLoader
         @inject(DI.ILoggerService) private readonly logger: ILoggerService)
     {}
 
-    load(ruleContent: string) : SigmaRule|null
+    load(ruleContent: string) : SigmaRule[]|null
     {
+        let rules: SigmaRule[] = [];
         let json: any = null;
 
         try
         {
-            json = YAML.parse(ruleContent);
+            json = (ruleContent.indexOf('action:') >= 0) ? YAML.parseAllDocuments(ruleContent)
+                                                         : YAML.parse(ruleContent);
         }
         catch (e)
         {
@@ -28,12 +34,62 @@ export class SigmaLoader implements ISigmaLoader
             return null;
         }
 
-        if(typeof json !== 'object')
+        if(TypeUtils.isArray(json))
         {
-            this.logger.error(`YAML parser for ${ruleContent} returned unexpected result ${JSON.stringify(json, null, 2)}`);
-            return null;
+            let globalDocument: ObjectLiteral = null;
+
+            for(let id in json)
+            {
+                const document = json[id].toJSON();
+
+                switch (document.action)
+                {
+                    case Action.Global:
+                        //
+                        // Global action should not be treated as a rule.
+                        // Save it to global variable and continue...
+                        //
+                        globalDocument = TypeUtils.deepCopy(document);
+                        continue;
+
+                    case Action.Reset:
+                        globalDocument = null;
+                        break;
+
+                    case Action.Repeat:
+                        const previousId = parseInt(id) - 1;
+                        globalDocument = TypeUtils.deepCopy(json[previousId].toJSON());
+                        break;
+                }
+
+                if(globalDocument)
+                {
+                    const merged = _.merge(document, globalDocument);
+
+                    const rule = this.jsonToRule(merged);
+
+                    rules.push(rule);
+                }
+                else
+                {
+                    const rule = this.jsonToRule(document);
+
+                    rules.push(rule);
+                }
+            }
+        }
+        else
+        {
+            const rule = this.jsonToRule(json);
+
+            rules.push(rule);
         }
 
+        return rules;
+    }
+
+    private jsonToRule(json: any): SigmaRule|null
+    {
         let rule: SigmaRule = plainToClass(SigmaRule, json);
 
         const errors = validateSync(rule);

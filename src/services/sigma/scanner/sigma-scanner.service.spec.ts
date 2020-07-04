@@ -42,7 +42,7 @@ describe('Sigma Scanner', () =>
         const loader = container.get<ISigmaLoader>(DI.ISigmaLoader);
         const rule = loader.load(ruleContent);
 
-        rule.detection.condition = 'some invalid 2020 2029 12313';
+        rule[0].detection.condition = 'some invalid 2020 2029 12313';
 
         const logger = container.get<ILoggerService>(DI.ILoggerService);
 
@@ -62,7 +62,7 @@ describe('Sigma Scanner', () =>
         const loader = container.get<ISigmaLoader>(DI.ISigmaLoader);
         const rule = loader.load(ruleContent);
 
-        rule.detection.condition = 'invalid';
+        rule[0].detection.condition = 'invalid';
 
         const logger = container.get<ILoggerService>(DI.ILoggerService);
 

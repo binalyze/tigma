@@ -1,6 +1,6 @@
 {
   "name": "@binalyze/tigma",
-  "version": "1.2.1",
+  "version": "1.2.5",
   "main": "dist/tigma.js",
   "scripts": {
     "build:ts": "tsc --build tsconfig.json",
@@ -19,6 +19,7 @@
     "test:cov": "npm run build:ts && jest --coverage"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.157",
     "@types/yaml": "^1.9.7",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
@@ -26,6 +27,7 @@
     "filtrex": "^2.0.0",
     "inversify": "^5.0.1",
     "inversify-inject-decorators": "^3.1.0",
+    "lodash": "^4.17.15",
     "reflect-metadata": "^0.1.13",
     "yaml": "^1.10.0"
   },

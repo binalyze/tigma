@@ -45,16 +45,16 @@ describe('Engine', () =>
         const filePath = path.resolve(yamlDir, "valid-rule.yaml");
         const ruleContent = fs.readFileSync(filePath, "utf8");
 
-        const rule: SigmaRule = engine.load(ruleContent);
-        expect(rule).toBeInstanceOf(SigmaRule);
+        const rules = engine.load(ruleContent);
+        expect(rules[0]).toBeInstanceOf(SigmaRule);
     });
 
     test('Engine.load should return null for an empty rule', () =>
     {
         const engine = container.get<IEngine>(DI.IEngine);
 
-        const rule: SigmaRule = engine.load('');
-        expect(rule).toBe(null);
+        const rules = engine.load('');
+        expect(rules).toBe(null);
     });
 
     test('Engine.load should output error for an invalid rule', () =>
@@ -66,8 +66,8 @@ describe('Engine', () =>
 
         const spy = jest.spyOn(logger, "error");
 
-        const rule: SigmaRule = engine.load(ruleContent);
-        expect(rule).toBe(null);
+        const rules = engine.load(ruleContent);
+        expect(rules).toBe(null);
 
         expect(spy.mock.calls[0][0]).toContain('unexpected result');
 
@@ -81,10 +81,10 @@ describe('Engine', () =>
         const filePath = path.resolve(yamlDir, "valid-rule.yaml");
         const ruleContent = fs.readFileSync(filePath, "utf8");
 
-        const rule: SigmaRule = engine.load(ruleContent);
-        expect(rule).toBeInstanceOf(SigmaRule);
+        const rules = engine.load(ruleContent);
+        expect(rules[0]).toBeInstanceOf(SigmaRule);
 
-        const identifiers:Identifier[] = engine.parse(rule);
+        const identifiers:Identifier[] = engine.parse(rules);
         expect(identifiers.length).toBe(3);
     });
 
@@ -95,9 +95,9 @@ describe('Engine', () =>
         const filePath = path.resolve(yamlDir, "valid-scan.yaml");
         const ruleContent = fs.readFileSync(filePath, "utf8");
 
-        const rule: SigmaRule = engine.load(ruleContent);
+        const rules = engine.load(ruleContent);
 
-        const result = engine.scan(rule, testCaseJSON);
+        const result = engine.scan(rules, testCaseJSON);
         expect(result).toBe(true);
     });
 });
