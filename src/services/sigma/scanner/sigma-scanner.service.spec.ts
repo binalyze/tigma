@@ -144,4 +144,16 @@ describe('Sigma Scanner', () =>
         const result = scanner.scan(rule, testCaseJSON);
         expect(result).toBe(false);
     });
+
+    test('RE modifier should succeed', () =>
+    {
+        const filePath = path.resolve(yamlDir, "valid-scan-re.yaml");
+        const content = fs.readFileSync(filePath, "utf8");
+
+        const loader = container.get<ISigmaLoader>(DI.ISigmaLoader);
+        const rule = loader.load(content);
+
+        const result = scanner.scan(rule, testCaseJSON);
+        expect(result).toBe(true);
+    });
 });

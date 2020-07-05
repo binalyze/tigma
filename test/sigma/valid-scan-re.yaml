@@ -1,0 +1,9 @@
+title: RE Rule
+logsource:
+  category: json
+  product: air
+detection:
+  selection:
+    Processes:
+      ProcessPath|re: 'C:\\.*csrss\..{0,3}$'
+  condition: selection

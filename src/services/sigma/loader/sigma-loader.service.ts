@@ -34,12 +34,6 @@ export class SigmaLoader implements ISigmaLoader
             return null;
         }
 
-        if(!json)
-        {
-            this.logger.error(`YAML parsing returned nullish result for ${ruleContent}`);
-            return null;
-        }
-
         if(TypeUtils.isArray(json))
         {
             let globalDocument: ObjectLiteral = null;
@@ -70,7 +64,7 @@ export class SigmaLoader implements ISigmaLoader
 
                 if(globalDocument)
                 {
-                    const merged = _.merge(document, globalDocument);
+                    const merged = _.merge(globalDocument, document);
 
                     const rule = this.jsonToRule(merged);
 

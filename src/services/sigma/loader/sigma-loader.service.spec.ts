@@ -73,4 +73,30 @@ describe('Sigma Loader', () =>
         const rules: SigmaRule[] = sigmaLoader.load(ruleContent);
         expect(rules).not.toBeNull();
     });
+
+    test('Action:repeat should modify the previous document', () =>
+    {
+        const filePath = path.resolve(yamlDir, "action-repeat.yaml");
+        const ruleContent = fs.readFileSync(filePath, "utf8");
+
+        const rules: SigmaRule[] = sigmaLoader.load(ruleContent);
+        expect(rules).toHaveLength(2);
+
+        expect(rules[0].detection.condition).toBe('all of them');
+        expect(rules[1].detection.condition).toBe('any of them');
+    });
+
+    test('Action:reset should clear global document', () =>
+    {
+        const filePath = path.resolve(yamlDir, "action-reset.yaml");
+        const ruleContent = fs.readFileSync(filePath, "utf8");
+
+        const rules: SigmaRule[] = sigmaLoader.load(ruleContent);
+        expect(rules).toHaveLength(2);
+
+        expect(rules[0].detection.selection.Processes.Name).toBe('csrss.exe');
+        expect(rules[0].detection.condition).toBe('all of them');
+        expect(rules[1].detection.selection.Processes.Name).toBe('smss.exe');
+        expect(rules[1].detection.condition).toBe('any of them');
+    });
 });

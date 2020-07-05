@@ -1,0 +1,25 @@
+action: global
+title: Repeat Rule
+logsource:
+  os: windows
+  category: case
+  product: air
+detection:
+  condition: all of them
+---
+detection:
+  selection:
+    Processes:
+      Name: csrss.exe
+---
+action: reset
+title: Repeat Rule
+logsource:
+  os: windows
+  category: case
+  product: air
+detection:
+  selection:
+    Processes:
+      Name: smss.exe
+  condition: any of them

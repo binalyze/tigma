@@ -1,0 +1,14 @@
+title: Repeat Rule
+logsource:
+  os: windows
+  category: case
+  product: air
+detection:
+  selection:
+    Processes:
+      Name: crsss.exe
+  condition: all of them
+---
+action: repeat
+detection:
+  condition: any of them

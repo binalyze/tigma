@@ -11,6 +11,7 @@ import {Detection} from "../../../rule/detection";
 import {ObjectLiteral} from "../../../types/object-literal";
 import {ModifierType} from "../../../rule/modifier-type.enum";
 import {TypeUtils} from "../../../utils/type-utils";
+import * as _ from "lodash";
 
 @injectable()
 export class SigmaScanner implements ISigmaScanner {
@@ -200,35 +201,43 @@ export class SigmaScanner implements ISigmaScanner {
         let modifier: Modifier = null;
         let matched = false;
 
-        if(source.indexOf('*') >= 0 || source.indexOf('?') >= 0)
+        if ((modifier = this.getModifier(modifiers, ModifierType.Contains)) != null)
         {
-            // Convert wildcard to regex
-            const reWildcard = new RegExp('^' + source.replace(/\*/g, '.*').replace(/\?/g, '.') + '$');
+            matched = target?.indexOf(source) >= 0 ?? false;
+        }
+        else if ((modifier = this.getModifier(modifiers, ModifierType.StartsWith)) != null)
+        {
+            matched = target?.startsWith(source) ?? false;
+        }
+        else if ((modifier = this.getModifier(modifiers, ModifierType.EndsWith)) != null)
+        {
+            matched = target?.endsWith(source) ?? false;
+        }
+        else if((modifier = this.getModifier(modifiers, ModifierType.Equals)) != null ||
+                (modifier = this.getModifier(modifiers, ModifierType.Eq)) != null)
+        {
+            matched = source === target;
+        }
+        else if ((modifier = this.getModifier(modifiers, ModifierType.Re)) != null)
+        {
+            const re = new RegExp(source);
 
-            matched = reWildcard.test(target);
+            return re.test(target);
         }
         else
         {
-            if ((modifier = this.getModifier(modifiers, ModifierType.Contains)) != null)
+            const matches = source.match(/[\\]?[\\]?[*?]/g);
+
+            const notEscaped = matches?.filter((m) => m !== '\\*' && m !== '\\?');
+
+            if(_.some(notEscaped))
             {
-                matched = target?.indexOf(source) >= 0 ?? false;
-            }
-            else if ((modifier = this.getModifier(modifiers, ModifierType.StartsWith)) != null)
-            {
-                matched = target?.startsWith(source) ?? false;
-            }
-            else if ((modifier = this.getModifier(modifiers, ModifierType.EndsWith)) != null)
-            {
-                matched = target?.endsWith(source) ?? false;
-            }
-            else if((modifier = this.getModifier(modifiers, ModifierType.Equals)) != null ||
-                    (modifier = this.getModifier(modifiers, ModifierType.Eq)) != null)
-            {
-                matched = source === target;
-            }
-            else if ((modifier = this.getModifier(modifiers, ModifierType.Re)) != null)
-            {
-                //TODO(emre): Implement regex matching here
+                //
+                // Convert wildcard to regex
+                //
+                const reWildcard = new RegExp('^' + source.replace(/\*/g, '.*').replace(/\?/g, '.') + '$');
+
+                return reWildcard.test(target);
             }
             else
             {
