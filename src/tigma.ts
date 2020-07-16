@@ -5,7 +5,7 @@ import {IEngineOptions} from "./engine/engine-opts.interface";
 import {IEngine} from "./engine/engine.interface";
 import {ILoggerService} from "./services/logger/logger.service.interface";
 
-function createEngine(options?: IEngineOptions): IEngine
+export function Tigma(options?: IEngineOptions): IEngine
 {
   const container = configureContainer({
     logger: options?.logger
@@ -16,9 +16,5 @@ function createEngine(options?: IEngineOptions): IEngine
 
   logger.info(`CreateEngine succeeded`);
 
-  engine.load('an-invalid-rule');
-
   return engine;
 }
-
-export default createEngine;

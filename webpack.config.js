@@ -1,16 +1,14 @@
 const path = require('path');
 const CompressionPlugin = require('compression-webpack-plugin');
-const JavaScriptObfuscator = require('webpack-obfuscator');
 
 module.exports = {
-  entry: path.join(__dirname, '/src/main.ts'),
+  entry: path.join(__dirname, '/src/tigma.ts'),
   output: {
-    filename: 'tigma.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/dist/',
-    library: 'createEngine',
-    libraryTarget: 'window',
-    libraryExport: 'default'
+    filename: 'tigma.js',
+    library: 'tigma',
+    libraryTarget: 'umd',
+    globalObject: 'this'
   },
   module: {
     rules: [

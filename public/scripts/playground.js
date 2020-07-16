@@ -6,7 +6,7 @@ function main()
 {
   initUI();
   
-  engine = createEngine({logger: logger});
+  engine = tigma.Tigma({logger: logger});
   
   if(!engine)
   {
