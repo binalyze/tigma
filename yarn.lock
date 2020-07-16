@@ -4053,9 +4053,9 @@ jest@^25.2.6:
     jest-cli "^25.5.4"
 
 js-base64@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.0.4.tgz#91981da93859dbf7e031447975c788d429402eff"
-  integrity sha512-H9B8qr6FuL/jfIaS0nQePrZBWtdKqSS9Cp0yTmPkPoVzbo43P6WPpHhYi1hPfl/ZbNRuzRzXOcTCYHWr4W8O2g==
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.1.0.tgz#d96ea0756f80baeffca6a5acddc93db80022ac7f"
+  integrity sha512-vD4mNuN5J75elGcSeXyrf6Mg4zFjPBM/WIafekHWqdXW95yWOqI1WeQIuCBV6B8+rdnwsJU9yjWH8ckoPlk81g==
 
 js-string-escape@1.0.1:
   version "1.0.1"
