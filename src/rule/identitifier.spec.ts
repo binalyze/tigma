@@ -6,7 +6,7 @@ describe('Identifier', () =>
 {
     const IdentifierObj = {
         "Process[]": {
-            "Name|base64|!contains": "process.exe",
+            "Name|!contains": "process.exe",
             "Module": {
                 "DllName": [
                     "ntdll.dll",
@@ -44,14 +44,12 @@ describe('Identifier', () =>
 
         const value = values[0];
 
-        expect(value.key).toBe(`Name|${ModifierType.Base64}|!${ModifierType.Contains}`);
+        expect(value.key).toBe(`Name|!${ModifierType.Contains}`);
         expect(value.name).toBe('Name');
         expect(value.type).toBe(IdentifierType.Primitive);
-        expect(value.modifiers).toHaveLength(2);
-        expect(value.modifiers[0].type).toBe(ModifierType.Base64);
-        expect(value.modifiers[0].negate).toBe(false);
-        expect(value.modifiers[1].type).toBe(ModifierType.Contains);
-        expect(value.modifiers[1].negate).toBe(true);
+        expect(value.modifiers).toHaveLength(1);
+        expect(value.modifiers[0].type).toBe(ModifierType.Contains);
+        expect(value.modifiers[0].negate).toBe(true);
         expect(value.values).toContain('process.exe');
     });
 });

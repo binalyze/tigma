@@ -13,8 +13,7 @@ tags:
 detection:
   selection:
     Processes:
-      Name: csrss.exe
-      CommandLine|contains: SharedSection=1024,20480
-
+      Name: null
+      Undefined: 1
   condition:  any of them
   timeframe: '5w'

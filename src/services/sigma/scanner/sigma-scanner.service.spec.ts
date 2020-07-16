@@ -156,4 +156,28 @@ describe('Sigma Scanner', () =>
         const result = scanner.scan(rule, testCaseJSON);
         expect(result).toBe(true);
     });
+
+    test('Undefined or null properties should succeeed', () =>
+    {
+        const filePath = path.resolve(yamlDir, "valid-scan-undefined-prop.yaml");
+        const content = fs.readFileSync(filePath, "utf8");
+
+        const loader = container.get<ISigmaLoader>(DI.ISigmaLoader);
+        const rule = loader.load(content);
+
+        const result = scanner.scan(rule, testCaseJSON);
+        expect(result).toBe(false);
+    });
+
+    test('Undefined or null properties should succeeed when negated', () =>
+    {
+        const filePath = path.resolve(yamlDir, "valid-scan-undefined-prop-negate.yaml");
+        const content = fs.readFileSync(filePath, "utf8");
+
+        const loader = container.get<ISigmaLoader>(DI.ISigmaLoader);
+        const rule = loader.load(content);
+
+        const result = scanner.scan(rule, testCaseJSON);
+        expect(result).toBe(false);
+    });
 });

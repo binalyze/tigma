@@ -1,6 +1,6 @@
 {
   "name": "@binalyze/tigma",
-  "version": "1.3.0",
+  "version": "1.3.6",
   "main": "dist/tigma.js",
   "scripts": {
     "build:ts": "tsc --build tsconfig.json",
@@ -16,9 +16,11 @@
     "clean": "tsc --build --clean",
     "test:pipeline": "npm run build:ts && jest --coverage --coverageReporters=cobertura",
     "test": "npm run build:ts && jest --watchAll",
-    "test:cov": "npm run build:ts && jest --coverage"
+    "test:cov": "npm run build:ts && jest --coverage",
+    "testbed": "npm run build:ts && node dist/testbed.js"
   },
   "dependencies": {
+    "@types/js-base64": "^2.3.2",
     "@types/lodash": "^4.14.157",
     "@types/yaml": "^1.9.7",
     "class-transformer": "^0.2.3",
@@ -27,6 +29,7 @@
     "filtrex": "^2.0.0",
     "inversify": "^5.0.1",
     "inversify-inject-decorators": "^3.1.0",
+    "js-base64": "^3.0.4",
     "lodash": "^4.17.15",
     "reflect-metadata": "^0.1.13",
     "yaml": "^1.10.0"

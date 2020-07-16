@@ -61,10 +61,11 @@ npm run start:dev
 See it in action by visiting <a href="https://binalyze.github.io/tigma/public/playground.htm" target="_blank">Tigma Playground</a>
 
 ## Work in progress
- - [ ] Implement full support for modifiers
- - [ ] Improve playground page
+ - [x] Implement support for YAML multiple documents
+ - [x] Increase support for modifiers
+ - [x] Improve playground page
  - [ ] Implement support for aggregation
- - [ ] Implement support for YAML multiple documents
+ 
  
  ## Credits
  Special Thanks go to the creators of Sigma and all contributors starting with:

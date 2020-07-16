@@ -12,6 +12,8 @@ import {ObjectLiteral} from "../../../types/object-literal";
 import {ModifierType} from "../../../rule/modifier-type.enum";
 import {TypeUtils} from "../../../utils/type-utils";
 import * as _ from "lodash";
+import { Base64 } from 'js-base64';
+import {match} from "assert";
 
 @injectable()
 export class SigmaScanner implements ISigmaScanner {
@@ -195,23 +197,27 @@ export class SigmaScanner implements ISigmaScanner {
 
     private matchString(sourceParam: string, targetParam: string, modifiers: Modifier[]): boolean
     {
-        const source = sourceParam?.toLowerCase();
-        const target = targetParam?.toLowerCase();
+        const source = sourceParam.toLowerCase();
+        const target = targetParam.toLowerCase();
 
         let modifier: Modifier = null;
         let matched = false;
 
+        //
+        // Evaluate operators
+        //
+
         if ((modifier = this.getModifier(modifiers, ModifierType.Contains)) != null)
         {
-            matched = target?.indexOf(source) >= 0 ?? false;
+            matched = target.indexOf(source) >= 0;
         }
         else if ((modifier = this.getModifier(modifiers, ModifierType.StartsWith)) != null)
         {
-            matched = target?.startsWith(source) ?? false;
+            matched = target.startsWith(source);
         }
         else if ((modifier = this.getModifier(modifiers, ModifierType.EndsWith)) != null)
         {
-            matched = target?.endsWith(source) ?? false;
+            matched = target.endsWith(source);
         }
         else if((modifier = this.getModifier(modifiers, ModifierType.Equals)) != null ||
                 (modifier = this.getModifier(modifiers, ModifierType.Eq)) != null)
@@ -284,13 +290,21 @@ export class SigmaScanner implements ISigmaScanner {
 
     private matchPrimitive(source: Primitive, target: Primitive, modifiers: Modifier[]): boolean
     {
-        let matched = false;
-        const type = typeof target;
+        let matched: boolean;
+        const targetType = typeof target;
+        const sourceType = typeof source;
 
-        switch (type)
+        switch (targetType)
         {
             case "string":
-                matched = this.matchString(source as string, target as string, modifiers);
+                try
+                {
+                    matched = this.matchString(source as string, target as string, modifiers);
+                }
+                catch (e)
+                {
+                    matched = false;
+                }
                 break;
             case "number":
                 matched = this.matchNumber(source as number, target as number, modifiers);

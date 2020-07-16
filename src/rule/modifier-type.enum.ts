@@ -12,7 +12,4 @@ export enum ModifierType
     GreaterThanOrEqual = 'gte',
     LessThan = 'lt',
     LessThanOrEqual = 'lte',
-
-    // ---------------- Transformers ------------------
-    Base64 = 'base64', //TODO(emre): Implement this
 }

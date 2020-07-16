@@ -19,20 +19,19 @@ describe('Modifier', () =>
 
     test('Multiple modifiers should be parsed correctly', () =>
     {
-        const modifiers = Modifier.extractModifiers('Name|base64|contains');
+        const modifiers = Modifier.extractModifiers('Name|contains');
 
-        expect(modifiers).toHaveLength(2);
-        expect(modifiers[0].type).toBe(ModifierType.Base64);
-        expect(modifiers[1].type).toBe(ModifierType.Contains);
+        expect(modifiers).toHaveLength(1);
+        expect(modifiers[0].type).toBe(ModifierType.Contains);
+        expect(modifiers[0].negate).toBe(false);
     });
 
     test('Negate operator should be parsed correctly', () =>
     {
-        const modifiers = Modifier.extractModifiers('Name|base64|!contains');
+        const modifiers = Modifier.extractModifiers('Name|!contains');
 
-        expect(modifiers).toHaveLength(2);
-        expect(modifiers[0].type).toBe(ModifierType.Base64);
-        expect(modifiers[1].type).toBe(ModifierType.Contains);
-        expect(modifiers[1].negate).toBe(true);
+        expect(modifiers).toHaveLength(1);
+        expect(modifiers[0].type).toBe(ModifierType.Contains);
+        expect(modifiers[0].negate).toBe(true);
     });
 });
