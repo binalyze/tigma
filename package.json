@@ -1,8 +1,11 @@
 {
   "name": "@binalyze/tigma",
-  "version": "1.3.8",
+  "version": "1.4.2",
   "main": "dist/tigma.js",
   "license": "GNU General Public License (GPL)",
+  "publishConfig": {
+    "registry": "https://binalyze.pkgs.visualstudio.com/Binalyze.AIR/_packaging/packages/npm/registry/"
+  },
   "scripts": {
     "build:ts": "tsc --build tsconfig.json",
     "build:webpack:debug": "webpack --config webpack.config.js --mode development && cp -rf dist/tigma.js public/scripts/tigma.js",
