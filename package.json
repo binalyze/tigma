@@ -1,11 +1,8 @@
 {
   "name": "@binalyze/tigma",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "main": "dist/tigma.js",
   "license": "GNU General Public License (GPL)",
-  "publishConfig": {
-    "registry": "https://binalyze.pkgs.visualstudio.com/Binalyze.AIR/_packaging/packages/npm/registry/"
-  },
   "scripts": {
     "build:ts": "tsc --build tsconfig.json",
     "build:webpack:debug": "webpack --config webpack.config.js --mode development && cp -rf dist/tigma.js public/scripts/tigma.js",
@@ -20,7 +17,8 @@
     "test:pipeline": "npm run build:ts && jest --coverage --coverageReporters=cobertura",
     "test": "npm run build:ts && jest --watchAll",
     "test:cov": "npm run build:ts && jest --coverage",
-    "testbed": "npm run build:ts && node dist/testbed.js"
+    "testbed": "npm run build:ts && node dist/testbed.js",
+    "publish:npm": "yrm use npm && yarn publish"
   },
   "dependencies": {
     "@types/js-base64": "^2.3.2",
