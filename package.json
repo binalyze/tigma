@@ -18,8 +18,8 @@
     "test": "npm run build:ts && jest --watchAll",
     "test:cov": "npm run build:ts && jest --coverage",
     "testbed": "npm run build:ts && node dist/testbed.js",
-    "publish:npm": "yrm use npm && yarn publish",
-    "publish:azure": "yrm use azure && yarn publish"
+    "use:npm": "yrm use npm",
+    "use:azure": "yrm use azure"
   },
   "dependencies": {
     "@types/js-base64": "^2.3.2",
