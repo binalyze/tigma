@@ -1,6 +1,6 @@
 {
   "name": "@binalyze/tigma",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "main": "dist/tigma.js",
   "license": "GNU General Public License (GPL)",
   "scripts": {
@@ -18,7 +18,8 @@
     "test": "npm run build:ts && jest --watchAll",
     "test:cov": "npm run build:ts && jest --coverage",
     "testbed": "npm run build:ts && node dist/testbed.js",
-    "publish:npm": "yrm use npm && yarn publish"
+    "publish:npm": "yrm use npm && yarn publish",
+    "publish:azure": "yrm use azure && yarn publish"
   },
   "dependencies": {
     "@types/js-base64": "^2.3.2",
