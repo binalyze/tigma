@@ -83,9 +83,6 @@ describe('Engine', () =>
 
         const rules = engine.load(ruleContent);
         expect(rules[0]).toBeInstanceOf(SigmaRule);
-
-        const identifiers:Identifier[] = engine.parse(rules);
-        expect(identifiers.length).toBe(3);
     });
 
     test('Engine.scan should succeed for a valid rule', () =>

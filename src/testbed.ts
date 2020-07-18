@@ -7,6 +7,7 @@ import {SigmaRule} from "./rule/sigma-rule";
 import {SigmaScanner} from "./services/sigma/scanner/sigma-scanner.service";
 import {ILoggerService} from "./services/logger/logger.service.interface";
 import {IEngine} from "./engine/engine.interface";
+import * as path from "path";
 
 const caseObj = {
     Processes: [
@@ -46,6 +47,18 @@ async function main()
 
     const logger = container.get<ILoggerService>(DI.ILoggerService);
     const engine = container.get<IEngine>(DI.IEngine);
+
+    const ruleContent = "title: Minimal Rule\n" +
+        "logsource:\n" +
+        "  os: windows\n" +
+        "  category: case\n" +
+        "  product: air\n" +
+        "detection:\n" +
+        "  selection:\n" +
+        "    Property: value\n" +
+        "  condition:  selection";
+
+    const rule = engine.load(ruleContent);
 }
 
 const result = main();

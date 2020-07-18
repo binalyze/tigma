@@ -39,42 +39,8 @@ export class Engine implements IEngine
         return this.loader.load(ruleContent);
     }
 
-    parse(rules: SigmaRule[]): Identifier[]
-    {
-        const list: Identifier[] = [];
-
-        for(let i in rules)
-        {
-            const rule = rules[i];
-
-            const identifiers = this.parseRule(rule);
-
-            list.push(...identifiers);
-        }
-
-        return list;
-    }
-
     scan(rules: SigmaRule[], json: ObjectLiteral): Map<string, object>|null
     {
         return this.scanner.scan(rules, json);
-    }
-
-    private parseRule(rule: SigmaRule): Identifier[]
-    {
-        const list: Identifier[] = [];
-
-        const names = rule.detection.getConditionNames();
-
-        for(let i in names)
-        {
-            const name = names[i];
-
-            const tree = new Identifier(name, rule.detection.getConditionByName(name));
-
-            list.push(tree);
-        }
-
-        return list;
     }
 }

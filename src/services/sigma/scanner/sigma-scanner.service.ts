@@ -24,7 +24,7 @@ export class SigmaScanner implements ISigmaScanner
         this.matchedElements = new Map<string, object>();
     }
 
-    public scan(rules: SigmaRule[], json: ObjectLiteral) : Map<string, object>|null
+    public scan(rules: SigmaRule[], json: ObjectLiteral) : Map<string, object>
     {
         for (let i in rules)
         {
@@ -169,30 +169,9 @@ export class SigmaScanner implements ISigmaScanner
         {
             const sectionIdentifier = condition.values[id] as Identifier; // Example: sectionIdentifier = Processes
 
-            //
-            // Check if requested case section is an array or an object?
-            //
+            const sectionJSON = caseJSON[sectionIdentifier.name];
 
-            const caseSection = caseJSON[sectionIdentifier.name];
-
-            if (TypeUtils.isArray(caseSection))
-            {
-                // Section is an array. Recurse for each member
-                for (let idx in caseSection)
-                {
-                    matched = this.filterByIdentifier(caseSection[idx], sectionIdentifier, 0);
-
-                    // We are matching on all elements until one matches
-                    if (matched)
-                    {
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                matched = this.filterByIdentifier(caseSection, sectionIdentifier, 0);
-            }
+            matched = this.filterByIdentifier(sectionJSON, sectionIdentifier, 0);
 
             this.logger.debug(`Condition section ${sectionIdentifier.name} match result: ${matched}`);
 
@@ -395,51 +374,55 @@ export class SigmaScanner implements ISigmaScanner
         return (all) ? matchCount === identifier.values.length : matchCount > 0;
     }
 
-    private filterByIdentifier(json: ObjectLiteral, identifier: Identifier, depth: number = 0): boolean
+    private filterByIdentifier(json: object|object[], identifier: Identifier, depth: number = 0): boolean
     {
         if (!json)
         {
-            this.logger.debug(`Undefined json provided for matching with identifier ${JSON.stringify(identifier)}`);
+            this.logger.debug(`Undefined target provided for matching with identifier ${JSON.stringify(identifier)}`);
             return false;
         }
 
         let matched = false;
 
-        const target = json[identifier.name];
-
-        if (TypeUtils.isArray(target))
+        if(TypeUtils.isArray(json))
         {
-            // JSON property is an array. Recurse for each member
-            for (let idx in target)
-            {
-                matched = this.filterByIdentifier(target[idx], identifier, depth);
+            const jsonArray = json as object[];
 
-                // We are matching on all elements until one matches
-                if (matched)
+            for(let i in jsonArray)
+            {
+                const jsonElement = jsonArray[i];
+
+                matched = this.filterByIdentifier(jsonElement, identifier, depth);
+
+                if(matched)
                 {
-                    break;
+                    return true;
                 }
             }
 
-            return matched;
+            return false;
         }
 
-        this.logger.debug(`Matching identifier ${identifier.name} on target: ${JSON.stringify(target)}`);
+        this.logger.debug(`Matching identifier ${identifier.name} on target: ${JSON.stringify(json)}`);
 
         for (let i in identifier.values)
         {
-            const currentIdentifier = identifier.values[i] as Identifier;
+            const subIdentifier = identifier.values[i] as Identifier;
 
-            if (currentIdentifier.type === IdentifierType.Primitive)
+            this.logger.debug(`Matching sub-identifier ${subIdentifier.name} on target: ${JSON.stringify(json)}`);
+
+            if (subIdentifier.type === IdentifierType.Primitive)
             {
-                matched = this.filterByPrimitive(json, currentIdentifier);
+                matched = this.filterByPrimitive(json, subIdentifier);
             }
             else
             {
-                matched = this.filterByIdentifier(json, currentIdentifier, depth + 1);
+                const jsonElement = (json as any)[subIdentifier.name];
+
+                matched = this.filterByIdentifier(jsonElement, subIdentifier, depth + 1);
             }
 
-            this.logger.debug(`Match result for ${currentIdentifier.name} is ${matched}`);
+            this.logger.debug(`Match result for ${subIdentifier.name} is ${matched}`);
 
             if (!matched)
             {

@@ -73,7 +73,7 @@
 
     <div class="col-sm-6">
       <div class="form-group">
-        <label for="rule-parsed">Rule Parsed</label>
+        <label for="rule-parsed">Rule AST</label>
         <pre id="rule-parsed"></pre>
       </div>
     </div>
@@ -89,6 +89,8 @@ detection:
   selection:
     Processes:
       Name: csrss.exe
+      Modules:
+        DllPath|contains: csrss.dll
   condition: selection
     </div>
     <div id="system">

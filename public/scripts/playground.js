@@ -54,9 +54,11 @@ function setScanResult(scanResult)
   }
   else
   {
+    const keys = [...scanResult.keys()]; // Map<string, object>
+    
     $('#match-result').removeClass('alert-danger').removeClass('alert-warning')
     .addClass('alert-success')
-    .html('Scan result: DETECTED');
+    .html(`Scan result: DETECTED in [${keys}]`);
   }
 }
 
@@ -78,15 +80,14 @@ function parseRule()
     return null;
   }
   
-  const identifiers = engine.parse(rules);
+  const conditions = [];
   
-  if(!identifiers || identifiers.length === 0)
+  rules.forEach(r =>
   {
-    logger.error(`Parsing rule failed`);
-    return null;
-  }
+    conditions.push(r.toAST());
+  });
   
-  viewJSON(identifiers, '#rule-parsed');
+  viewJSON(conditions, '#rule-parsed');
   
   setRuleStatus(true);
   

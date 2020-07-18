@@ -15,6 +15,7 @@ import {Status} from "./status.enum";
 import {Level} from "./level.enum";
 import {Type} from "class-transformer";
 import {Action} from "./action.enum";
+import {Identifier} from "./identifier";
 
 /**
  * @see https://github.com/Neo23x0/sigma/wiki/Specification
@@ -91,4 +92,22 @@ export class SigmaRule
     @IsArray()
     public info: string[];
     //#endregion
+
+    public toAST(): Identifier[]
+    {
+        const list: Identifier[] = [];
+
+        const names = this.detection.getConditionNames();
+
+        for(let i in names)
+        {
+            const name = names[i];
+
+            const tree = new Identifier(name, this.detection.getConditionByName(name));
+
+            list.push(tree);
+        }
+
+        return list;
+    }
 }
