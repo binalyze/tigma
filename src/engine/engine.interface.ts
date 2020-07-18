@@ -8,5 +8,5 @@ export interface IEngine
     init(options: IEngineOptions): void;
     load(ruleContent: string): SigmaRule[];
     parse(rules: SigmaRule[]): Identifier[];
-    scan(rules: SigmaRule[], json: ObjectLiteral): boolean;
+    scan(rules: SigmaRule[], json: ObjectLiteral): Map<string, object>|null;
 }

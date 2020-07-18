@@ -34,6 +34,7 @@
           See Examples
         </button>
         <div class="dropdown-menu" aria-labelledby="examples">
+          <a class="dropdown-item" href="#" data-rule="system">Search in System</a>
           <a class="dropdown-item" href="#" data-rule="autoruns">Search in Autoruns</a>
           <a class="dropdown-item" href="#" data-rule="services">Search in Services</a>
           <a class="dropdown-item" href="#" data-rule="wmiscripts">Search in WMI Scripts</a>
@@ -90,6 +91,17 @@ detection:
       Name: csrss.exe
   condition: selection
     </div>
+    <div id="system">
+title: Scan System Settings
+logsource:
+  category: json
+  product: air
+detection:
+  selection:
+    System:
+      ComputerName: JohnPC
+  condition: selection
+  </div>
     <div id="autoruns">
 title: Scan Autorun Entries
 logsource:

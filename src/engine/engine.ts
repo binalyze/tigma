@@ -55,7 +55,7 @@ export class Engine implements IEngine
         return list;
     }
 
-    scan(rules: SigmaRule[], json: ObjectLiteral): boolean
+    scan(rules: SigmaRule[], json: ObjectLiteral): Map<string, object>|null
     {
         return this.scanner.scan(rules, json);
     }

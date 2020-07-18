@@ -12,32 +12,46 @@ import {ObjectLiteral} from "../../../types/object-literal";
 import {ModifierType} from "../../../rule/modifier-type.enum";
 import {TypeUtils} from "../../../utils/type-utils";
 import * as _ from "lodash";
-import { Base64 } from 'js-base64';
-import {match} from "assert";
 
 @injectable()
-export class SigmaScanner implements ISigmaScanner {
-    constructor(
-        @inject(DI.ILoggerService) private readonly logger: ILoggerService) {
+export class SigmaScanner implements ISigmaScanner
+{
+    private readonly matchedElements: Map<string, object>;
 
+    constructor(
+        @inject(DI.ILoggerService) private readonly logger: ILoggerService)
+    {
+        this.matchedElements = new Map<string, object>();
     }
 
-    public scan(rules: SigmaRule[], json: ObjectLiteral) : boolean
+    public scan(rules: SigmaRule[], json: ObjectLiteral) : Map<string, object>|null
     {
         for (let i in rules)
         {
             const rule = rules[i];
 
+            this.clearMatchedElements();
+
             if(this.scanRule(rule, json))
             {
-                return true;
+                return this.matchedElements;
             }
         }
 
-        return false;
+        return null;
     }
 
     //#region Utilities
+    private clearMatchedElements()
+    {
+        this.matchedElements.clear();
+    }
+
+    private addMatchedElement(section: string, element: object)
+    {
+        this.matchedElements.set(section, element);
+    }
+
     private scanRule(rule: SigmaRule, json: ObjectLiteral) : boolean
     {
         const self = this;
@@ -146,16 +160,39 @@ export class SigmaScanner implements ISigmaScanner {
 
         //
         // Conditions are named by user and 'always' a Map type due to Case JSON structure
-        // Thus, we should AND them all
+        // Thus, we should AND them all!
         //
 
         let matched = false;
 
-        for (let id in condition.values)
+        for (let id in condition.values) // Example: Condition is "selection" whereas values are Processes, Prefetch and etc.
         {
-            const sectionIdentifier = condition.values[id] as Identifier;
+            const sectionIdentifier = condition.values[id] as Identifier; // Example: sectionIdentifier = Processes
 
-            matched = this.filterByIdentifier(caseJSON, sectionIdentifier);
+            //
+            // Check if requested case section is an array or an object?
+            //
+
+            const caseSection = caseJSON[sectionIdentifier.name];
+
+            if (TypeUtils.isArray(caseSection))
+            {
+                // Section is an array. Recurse for each member
+                for (let idx in caseSection)
+                {
+                    matched = this.filterByIdentifier(caseSection[idx], sectionIdentifier, 0);
+
+                    // We are matching on all elements until one matches
+                    if (matched)
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                matched = this.filterByIdentifier(caseSection, sectionIdentifier, 0);
+            }
 
             this.logger.debug(`Condition section ${sectionIdentifier.name} match result: ${matched}`);
 
@@ -169,10 +206,6 @@ export class SigmaScanner implements ISigmaScanner {
                 matchCount++;
             }
         }
-
-        //
-        // If multiple sections are provided we will match the case itself!
-        //
 
         return matchCount === condition.values.length;
     }
@@ -291,8 +324,8 @@ export class SigmaScanner implements ISigmaScanner {
     private matchPrimitive(source: Primitive, target: Primitive, modifiers: Modifier[]): boolean
     {
         let matched: boolean;
+
         const targetType = typeof target;
-        const sourceType = typeof source;
 
         switch (targetType)
         {
@@ -362,13 +395,15 @@ export class SigmaScanner implements ISigmaScanner {
         return (all) ? matchCount === identifier.values.length : matchCount > 0;
     }
 
-    private filterByIdentifier(json: ObjectLiteral, identifier: Identifier): boolean
+    private filterByIdentifier(json: ObjectLiteral, identifier: Identifier, depth: number = 0): boolean
     {
         if (!json)
         {
             this.logger.debug(`Undefined json provided for matching with identifier ${JSON.stringify(identifier)}`);
             return false;
         }
+
+        let matched = false;
 
         const target = json[identifier.name];
 
@@ -377,20 +412,19 @@ export class SigmaScanner implements ISigmaScanner {
             // JSON property is an array. Recurse for each member
             for (let idx in target)
             {
-                const matched = this.filterByIdentifier(target[idx], identifier);
+                matched = this.filterByIdentifier(target[idx], identifier, depth);
 
                 // We are matching on all elements until one matches
                 if (matched)
                 {
-                    return matched;
+                    break;
                 }
             }
 
-            // None matched, return false
-            return false;
+            return matched;
         }
 
-        let matched = false;
+        this.logger.debug(`Matching identifier ${identifier.name} on target: ${JSON.stringify(target)}`);
 
         for (let i in identifier.values)
         {
@@ -402,7 +436,7 @@ export class SigmaScanner implements ISigmaScanner {
             }
             else
             {
-                matched = this.filterByIdentifier(json, currentIdentifier);
+                matched = this.filterByIdentifier(json, currentIdentifier, depth + 1);
             }
 
             this.logger.debug(`Match result for ${currentIdentifier.name} is ${matched}`);
@@ -418,6 +452,11 @@ export class SigmaScanner implements ISigmaScanner {
                     return false;
                 }
             }
+        }
+
+        if(matched && depth === 0)
+        {
+            this.addMatchedElement(identifier.name, json);
         }
 
         return matched;

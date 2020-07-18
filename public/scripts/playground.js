@@ -37,29 +37,26 @@ function setRuleStatus(isValid)
   }
 }
 
-function setMatchResult(isMatched)
+function startScanning()
 {
-  if(isMatched === null)
+  $('#match-result').removeClass('alert-danger').removeClass('alert-success')
+  .addClass('alert-warning')
+  .html('Scanning JSON');
+}
+
+function setScanResult(scanResult)
+{
+  if(scanResult === null)
   {
-    $('#match-result').removeClass('alert-danger').removeClass('alert-success')
-    .addClass('alert-warning')
-    .html('Scanning JSON');
-    return;
-  }
-  
-  $('#match-result').removeClass('alert-warning');
-  
-  if(isMatched)
-  {
-    $('#match-result').removeClass('alert-danger')
-    .addClass('alert-success')
-    .html('Scan result: DETECTED');
+    $('#match-result').removeClass('alert-success').removeClass('alert-warning')
+    .addClass('alert-danger')
+    .html('Scan result: NO MATCH');
   }
   else
   {
-    $('#match-result').removeClass('alert-success')
-    .addClass('alert-danger')
-    .html('Scan result: NO MATCH');
+    $('#match-result').removeClass('alert-danger').removeClass('alert-warning')
+    .addClass('alert-success')
+    .html('Scan result: DETECTED');
   }
 }
 
@@ -93,13 +90,11 @@ function parseRule()
   
   setRuleStatus(true);
   
-  const matched = engine.scan(rules, caseJSON);
+  const scanResult = engine.scan(rules, caseJSON);
   
-  setMatchResult(matched);
+  setScanResult(scanResult);
   
   logger.info(`Rule parsing succeeded`);
-  
-  return matched;
 }
 
 function loadTemplateRule(name)
@@ -141,7 +136,8 @@ function initUI()
   $('#btn-scan-rule').click(function()
   {
     $(this).html('Scanning Rule...').prop('disabled', true);
-    setMatchResult(null);
+    
+    startScanning();
     
     setTimeout(() =>
     {

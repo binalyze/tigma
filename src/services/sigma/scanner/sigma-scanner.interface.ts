@@ -3,5 +3,5 @@ import {ObjectLiteral} from "../../../types/object-literal";
 
 export interface ISigmaScanner
 {
-    scan(rules: SigmaRule[], json: ObjectLiteral) : boolean;
+    scan(rules: SigmaRule[], json: ObjectLiteral): Map<string, object>;
 }
