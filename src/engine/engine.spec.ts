@@ -98,6 +98,6 @@ describe('Engine', () =>
         const rules = engine.load(ruleContent);
 
         const result = engine.scan(rules, testCaseJSON);
-        expect(result).toBe(true);
+        expect(result).not.toBe(null);
     });
 });

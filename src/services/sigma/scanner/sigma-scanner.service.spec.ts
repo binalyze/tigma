@@ -31,7 +31,7 @@ describe('Sigma Scanner', () =>
 
         const result = scanner.scan(rule, testCaseJSON);
 
-        expect(result).toBe(true);
+        expect(result).not.toBe(null);
     });
 
     test('Invalid condition groups should output error message', () =>
@@ -94,7 +94,7 @@ describe('Sigma Scanner', () =>
         const rule = loader.load(content);
 
         const result = scanner.scan(rule, testCaseJSON);
-        expect(result).toBe(true);
+        expect(result).not.toBe(null);
     });
 
     test('Modifiers should be handled properly', () =>
@@ -106,7 +106,7 @@ describe('Sigma Scanner', () =>
         const rule = loader.load(content);
 
         const result = scanner.scan(rule, testCaseJSON);
-        expect(result).toBe(true);
+        expect(result).not.toBe(null);
     });
 
     test('Invalid property matching', () =>
@@ -118,7 +118,7 @@ describe('Sigma Scanner', () =>
         const rule = loader.load(content);
 
         const result = scanner.scan(rule, testCaseJSON);
-        expect(result).toBe(false);
+        expect(result).toBe(null);
     });
 
     test('Invalid case section should return false', () =>
@@ -130,7 +130,7 @@ describe('Sigma Scanner', () =>
         const rule = loader.load(content);
 
         const result = scanner.scan(rule, null);
-        expect(result).toBe(false);
+        expect(result).toBe(null);
     });
 
     test('Failing one item should fail when "all" modifier is in use', () =>
@@ -142,7 +142,7 @@ describe('Sigma Scanner', () =>
         const rule = loader.load(content);
 
         const result = scanner.scan(rule, testCaseJSON);
-        expect(result).toBe(false);
+        expect(result).toBe(null);
     });
 
     test('RE modifier should succeed', () =>
@@ -154,7 +154,7 @@ describe('Sigma Scanner', () =>
         const rule = loader.load(content);
 
         const result = scanner.scan(rule, testCaseJSON);
-        expect(result).toBe(true);
+        expect(result).not.toBe(null);
     });
 
     test('Undefined or null properties should succeeed', () =>
@@ -166,7 +166,7 @@ describe('Sigma Scanner', () =>
         const rule = loader.load(content);
 
         const result = scanner.scan(rule, testCaseJSON);
-        expect(result).toBe(false);
+        expect(result).toBe(null);
     });
 
     test('Undefined or null properties should succeeed when negated', () =>
@@ -178,6 +178,6 @@ describe('Sigma Scanner', () =>
         const rule = loader.load(content);
 
         const result = scanner.scan(rule, testCaseJSON);
-        expect(result).toBe(false);
+        expect(result).toBe(null);
     });
 });
