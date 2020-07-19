@@ -4,7 +4,7 @@ export const DI =
 {
     ILoggerService: "ILoggerService",
 
-    IEngine: "IEngine",
+    ITigmaEngine: "ITigmaEngine",
 
     ISigmaLoader: "ISigmaLoader",
     ISigmaScanner: "ISigmaScanner",

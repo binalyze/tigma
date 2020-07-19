@@ -1,20 +1,20 @@
 import "reflect-metadata" // Should only be called once!!!
 import {DI} from "./container.types";
 import {configureContainer} from "./container.bindings";
-import {IEngineOptions} from "./engine/engine-opts.interface";
-import {IEngine} from "./engine/engine.interface";
+import {ITigmaOptions} from "./engine/tigma-options.interface";
+import {ITigmaEngine} from "./engine/tigma-engine.interface";
 import {ILoggerService} from "./services/logger/logger.service.interface";
 
-export function Tigma(options?: IEngineOptions): IEngine
+export function Tigma(options?: ITigmaOptions): ITigmaEngine
 {
   const container = configureContainer({
     logger: options?.logger
   });
 
   const logger = container.get<ILoggerService>(DI.ILoggerService);
-  const engine = container.get<IEngine>(DI.IEngine);
+  const engine = container.get<ITigmaEngine>(DI.ITigmaEngine);
 
-  logger.info(`CreateEngine succeeded`);
+  logger.info(`Tigma Engine successfully created`);
 
   return engine;
 }

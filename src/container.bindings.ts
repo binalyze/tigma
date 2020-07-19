@@ -7,12 +7,12 @@ import {SigmaScanner} from "./services/sigma/scanner/sigma-scanner.service";
 import {ISigmaLoader} from "./services/sigma/loader/sigma-loader.interface";
 import {ISigmaScanner} from "./services/sigma/scanner/sigma-scanner.interface";
 import {ILoggerService} from "./services/logger/logger.service.interface";
-import {IEngine} from "./engine/engine.interface";
-import {Engine} from "./engine/engine";
+import {ITigmaEngine} from "./engine/tigma-engine.interface";
+import {TigmaEngine} from "./engine/tigma-engine";
 
 export function setDefaultBindings(container: Container): void
 {
-    container.bind<IEngine>(DI.IEngine).to(Engine);
+    container.bind<ITigmaEngine>(DI.ITigmaEngine).to(TigmaEngine);
     container.bind<ISigmaLoader>(DI.ISigmaLoader).to(SigmaLoader);
     container.bind<ISigmaScanner>(DI.ISigmaScanner).to(SigmaScanner);
 }

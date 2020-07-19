@@ -1,19 +1,19 @@
-import {IEngine} from "./engine.interface";
+import {ITigmaEngine} from "./tigma-engine.interface";
 import {SigmaRule} from "../rule/sigma-rule";
 import {ObjectLiteral} from "../types/object-literal";
 import {inject, injectable} from "inversify";
 import {DI} from "../container.types";
 import {ILoggerService} from "../services/logger/logger.service.interface";
-import {IEngineOptions} from "./engine-opts.interface";
+import {ITigmaOptions} from "./tigma-options.interface";
 import {ISigmaLoader} from "../services/sigma/loader/sigma-loader.interface";
 import {ISigmaScanner} from "../services/sigma/scanner/sigma-scanner.interface";
 import {Identifier} from "../rule/identifier";
 import {TypeUtils} from "../utils/type-utils";
 
 @injectable()
-export class Engine implements IEngine
+export class TigmaEngine implements ITigmaEngine
 {
-    private options: IEngineOptions = {};
+    private options: ITigmaOptions = {};
 
     constructor(
        @inject(DI.ILoggerService) private readonly logger: ILoggerService,
@@ -23,7 +23,7 @@ export class Engine implements IEngine
         this.logger.info(`Sigma Engine created`);
     }
 
-    init(options: IEngineOptions): void
+    init(options: ITigmaOptions): void
     {
         this.options = options;
     }

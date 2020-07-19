@@ -1,6 +1,6 @@
 {
   "name": "@binalyze/tigma",
-  "version": "1.4.8",
+  "version": "1.4.10",
   "main": "dist/tigma.js",
   "license": "GPL-3.0-only",
   "scripts": {
@@ -8,7 +8,7 @@
     "build:webpack": "webpack --config webpack.config.js --mode production && cp -rf dist/tigma.js public/scripts/tigma.js",
     "build": "yarn build:ts && yarn build:webpack",
     "serve": "yarn build && webpack-dev-server",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "yarn build",
     "push": "git push -f github master && git push -f origin master",
     "rimraf": "rm -rf dist",
     "clean": "tsc --build --clean",

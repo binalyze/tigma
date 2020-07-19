@@ -6,7 +6,7 @@ import {SigmaLoader} from "./services/sigma/loader/sigma-loader.service";
 import {SigmaRule} from "./rule/sigma-rule";
 import {SigmaScanner} from "./services/sigma/scanner/sigma-scanner.service";
 import {ILoggerService} from "./services/logger/logger.service.interface";
-import {IEngine} from "./engine/engine.interface";
+import {ITigmaEngine} from "./engine/tigma-engine.interface";
 import * as path from "path";
 
 const caseObj = {
@@ -46,7 +46,7 @@ async function main()
     const container = configureContainer();
 
     const logger = container.get<ILoggerService>(DI.ILoggerService);
-    const engine = container.get<IEngine>(DI.IEngine);
+    const engine = container.get<ITigmaEngine>(DI.ITigmaEngine);
 
     const ruleContent = "title: Minimal Rule\n" +
         "logsource:\n" +
