@@ -1,6 +1,6 @@
 {
   "name": "@binalyze/tigma",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "main": "dist/tigma.js",
   "license": "GPL-3.0-only",
   "scripts": {
@@ -15,9 +15,7 @@
     "test:pipeline": "npm run build:ts && jest --coverage --coverageReporters=cobertura",
     "test": "yarn build:ts && jest --watchAll",
     "test:cov": "yarn build:ts && jest --coverage",
-    "testbed": "yarn build:ts && node dist/testbed.js",
-    "use:npm": "yrm use npm",
-    "use:azure": "yrm use azure"
+    "testbed": "yarn build:ts && node dist/testbed.js"
   },
   "dependencies": {
     "@types/js-base64": "^2.3.2",
