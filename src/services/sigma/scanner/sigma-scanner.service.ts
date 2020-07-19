@@ -332,10 +332,8 @@ export class SigmaScanner implements ISigmaScanner
         return this.shouldNegate(modifiers) ? !matched : matched;
     }
 
-    private filterByPrimitive(json: any, identifier: Identifier): boolean
+    private filterByPrimitive(target: any, identifier: Identifier): boolean
     {
-        const target = json[identifier.name]; // Check if exists on target json
-
         if (target === undefined)
         {
             return false;
@@ -411,14 +409,14 @@ export class SigmaScanner implements ISigmaScanner
 
             this.logger.debug(`Matching sub-identifier ${subIdentifier.name} on target: ${JSON.stringify(json)}`);
 
+            const jsonElement = (json as any)[subIdentifier.name];
+
             if (subIdentifier.type === IdentifierType.Primitive)
             {
-                matched = this.filterByPrimitive(json, subIdentifier);
+                matched = this.filterByPrimitive(jsonElement, subIdentifier);
             }
             else
             {
-                const jsonElement = (json as any)[subIdentifier.name];
-
                 matched = this.filterByIdentifier(jsonElement, subIdentifier, depth + 1);
             }
 
