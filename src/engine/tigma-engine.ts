@@ -7,8 +7,6 @@ import {ILoggerService} from "../services/logger/logger.service.interface";
 import {ITigmaOptions} from "./tigma-options.interface";
 import {ISigmaLoader} from "../services/sigma/loader/sigma-loader.interface";
 import {ISigmaScanner} from "../services/sigma/scanner/sigma-scanner.interface";
-import {Identifier} from "../rule/identifier";
-import {TypeUtils} from "../utils/type-utils";
 
 @injectable()
 export class TigmaEngine implements ITigmaEngine
@@ -19,9 +17,7 @@ export class TigmaEngine implements ITigmaEngine
        @inject(DI.ILoggerService) private readonly logger: ILoggerService,
        @inject(DI.ISigmaLoader) private readonly loader: ISigmaLoader,
        @inject(DI.ISigmaScanner) private readonly scanner: ISigmaScanner)
-    {
-        this.logger.info(`Sigma Engine created`);
-    }
+    {}
 
     init(options: ITigmaOptions): void
     {

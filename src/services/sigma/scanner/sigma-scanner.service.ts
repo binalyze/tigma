@@ -212,31 +212,30 @@ export class SigmaScanner implements ISigmaScanner
         const source = sourceParam.toLowerCase();
         const target = targetParam.toLowerCase();
 
-        let modifier: Modifier = null;
         let matched = false;
 
         //
         // Evaluate operators
         //
 
-        if ((modifier = this.getModifier(modifiers, ModifierType.Contains)) != null)
+        if ((this.getModifier(modifiers, ModifierType.Contains)) != null)
         {
             matched = target.indexOf(source) >= 0;
         }
-        else if ((modifier = this.getModifier(modifiers, ModifierType.StartsWith)) != null)
+        else if ((this.getModifier(modifiers, ModifierType.StartsWith)) != null)
         {
             matched = target.startsWith(source);
         }
-        else if ((modifier = this.getModifier(modifiers, ModifierType.EndsWith)) != null)
+        else if ((this.getModifier(modifiers, ModifierType.EndsWith)) != null)
         {
             matched = target.endsWith(source);
         }
-        else if((modifier = this.getModifier(modifiers, ModifierType.Equals)) != null ||
-                (modifier = this.getModifier(modifiers, ModifierType.Eq)) != null)
+        else if((this.getModifier(modifiers, ModifierType.Equals)) != null ||
+                (this.getModifier(modifiers, ModifierType.Eq)) != null)
         {
             matched = source === target;
         }
-        else if ((modifier = this.getModifier(modifiers, ModifierType.Re)) != null)
+        else if ((this.getModifier(modifiers, ModifierType.Re)) != null)
         {
             const re = new RegExp(source);
 
@@ -268,22 +267,21 @@ export class SigmaScanner implements ISigmaScanner
 
     private matchNumber(source: number, target: number, modifiers: Modifier[]): boolean
     {
-        let modifier: Modifier = null;
-        let matched = false;
+        let matched: boolean;
 
-        if ((modifier = this.getModifier(modifiers, ModifierType.LessThan)) != null)
+        if ((this.getModifier(modifiers, ModifierType.LessThan)) != null)
         {
             matched = target < source;
         }
-        else if ((modifier = this.getModifier(modifiers, ModifierType.LessThanOrEqual)) != null)
+        else if ((this.getModifier(modifiers, ModifierType.LessThanOrEqual)) != null)
         {
             matched = target <= source;
         }
-        else if ((modifier = this.getModifier(modifiers, ModifierType.GreaterThan)) != null)
+        else if ((this.getModifier(modifiers, ModifierType.GreaterThan)) != null)
         {
             matched = target > source;
         }
-        else if ((modifier = this.getModifier(modifiers, ModifierType.GreaterThanOrEqual)) != null)
+        else if ((this.getModifier(modifiers, ModifierType.GreaterThanOrEqual)) != null)
         {
             matched = target >= source;
         }
@@ -305,28 +303,48 @@ export class SigmaScanner implements ISigmaScanner
         let matched: boolean;
 
         const targetType = typeof target;
+        const sourceType = typeof source;
 
-        switch (targetType)
+        if(sourceType === targetType)
         {
-            case "string":
-                try
-                {
-                    matched = this.matchString(source as string, target as string, modifiers);
-                }
-                catch (e)
-                {
-                    matched = false;
-                }
-                break;
-            case "number":
-                matched = this.matchNumber(source as number, target as number, modifiers);
-                break;
-            case "boolean":
-                matched = this.matchBoolean(source as boolean, target as boolean);
-                break;
-            default: // covers null value
-                matched = source === target;
-                break;
+            switch (targetType)
+            {
+                case "string":
+                    try
+                    {
+                        matched = this.matchString(source as string, target as string, modifiers);
+                    }
+                    catch (e)
+                    {
+                        matched = false;
+                    }
+                    break;
+                case "number":
+                    matched = this.matchNumber(source as number, target as number, modifiers);
+                    break;
+                case "boolean":
+                    matched = this.matchBoolean(source as boolean, target as boolean);
+                    break;
+                default: // covers null value
+                    matched = source === target;
+                    break;
+            }
+        }
+        else
+        {
+            //
+            // Handle in-consistent source and destination types.
+            // Rule may have boolean whereas JSON having a number
+            // Examples:
+            // FileExists: 1 vs true
+            // DigitalSignStatus: 0 vs false
+            //
+
+            if(sourceType === "boolean")
+            {
+                matched = (source) ? (target > 0)
+                                   : (target === 0);
+            }
         }
 
         return this.shouldNegate(modifiers) ? !matched : matched;
