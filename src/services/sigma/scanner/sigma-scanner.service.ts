@@ -302,8 +302,8 @@ export class SigmaScanner implements ISigmaScanner
     {
         let matched: boolean;
 
-        const targetType = typeof target;
-        const sourceType = typeof source;
+        const targetType: string = typeof target;
+        const sourceType: string = typeof source;
 
         if(sourceType === targetType)
         {
@@ -338,12 +338,31 @@ export class SigmaScanner implements ISigmaScanner
             // Examples:
             // FileExists: 1 vs true
             // DigitalSignStatus: 0 vs false
+            // SourcePort: 80 vs "80"
             //
 
             if(sourceType === "boolean")
             {
                 matched = (source) ? (target > 0)
                                    : (target === 0);
+            }
+            else if(sourceType === "number" && targetType === "string")
+            {
+                const targetNumber = parseInt(target as string);
+
+                if(!isNaN(targetNumber))
+                {
+                    matched = this.matchNumber(source as number, targetNumber, modifiers);
+                }
+            }
+            else if(sourceType === "string" && targetType === "number")
+            {
+                const sourceNumber = parseInt(source as string);
+
+                if(!isNaN(sourceNumber))
+                {
+                    matched = this.matchNumber(sourceNumber, target as number, modifiers);
+                }
             }
         }
 
