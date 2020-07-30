@@ -1,0 +1,31 @@
+title: Valid Rule
+description: Scan rule
+references:
+  - http://binalyze.com
+author: Emre TINAZTEPE
+logsource:
+  os: windows
+  category: case
+  product: air
+level: medium
+tags:
+  - attack.358
+detection:
+  selection:
+    Processes:
+      Name|startswith: csrss.exe
+      ProcessPath|endswith: csrss.exe
+      CommandLine|contains: ObjectDirectory
+      Publisher|equals: Microsoft Windows Publisher
+      Is32Bit: false
+      FileSize: 18144
+      FileSize|lt: 18145
+      FileSize|gt: 18143
+      FileSize|lte: 18145
+      FileSize|gte: 18143
+      NullProperty: null
+      UserName|all:
+        - '*SYSTEM*'
+        - '*NT*'
+  condition:  any of them
+  timeframe: '5w'
