@@ -15,5 +15,10 @@ detection:
     Processes:
       Name: csrss.exe
       CommandLine|contains: SharedSection=1024,20480
+      FileSize: true
+      Is32Bit: false
+      DigitalSignStatus: false
+      T_PEB: 308512346112
+      _ParentId: "0"
   condition:  any of them
   timeframe: '5w'

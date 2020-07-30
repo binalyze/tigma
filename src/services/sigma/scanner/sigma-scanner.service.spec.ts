@@ -1,7 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
 import {configureTestContainer} from "../../../../test/container.bindings";
-import {SigmaScanner} from "./sigma-scanner.service";
 import {DI} from "../../../container.types";
 import {setDefaultBindings} from "../../../container.bindings";
 import {ISigmaScanner} from "./sigma-scanner.interface";
@@ -47,7 +46,7 @@ describe('Sigma Scanner', () =>
         const logger = container.get<ILoggerService>(DI.ILoggerService);
 
         const spy = jest.spyOn(logger, 'error');
-        const result = scanner.scan(rule, testCaseJSON);
+        scanner.scan(rule, testCaseJSON);
 
         expect(spy.mock.calls[0][0]).toContain('Lazy condition looks erroneous');
 
@@ -67,7 +66,7 @@ describe('Sigma Scanner', () =>
         const logger = container.get<ILoggerService>(DI.ILoggerService);
 
         const spy = jest.spyOn(logger, 'error');
-        const result = scanner.scan(rule, testCaseJSON);
+        scanner.scan(rule, testCaseJSON);
 
         expect(spy.mock.calls[0][0]).toContain('Lazy condition looks erroneous');
 
@@ -172,6 +171,18 @@ describe('Sigma Scanner', () =>
     test('Undefined or null properties should succeeed when negated', () =>
     {
         const filePath = path.resolve(yamlDir, "valid-scan-undefined-prop-negate.yaml");
+        const content = fs.readFileSync(filePath, "utf8");
+
+        const loader = container.get<ISigmaLoader>(DI.ISigmaLoader);
+        const rule = loader.load(content);
+
+        const result = scanner.scan(rule, testCaseJSON);
+        expect(result).toBe(null);
+    });
+
+    test('One non-matching element should break the chain', () =>
+    {
+        const filePath = path.resolve(yamlDir, "valid-rule-break-all-chain.yaml");
         const content = fs.readFileSync(filePath, "utf8");
 
         const loader = container.get<ISigmaLoader>(DI.ISigmaLoader);

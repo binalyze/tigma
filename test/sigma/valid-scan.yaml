@@ -15,6 +15,7 @@ detection:
     Processes:
       Name: csrss.exe
       CommandLine|contains: SharedSection=1024,20480
-
+      Modules:
+        EntryPoint: 0
   condition:  any of them
   timeframe: '5w'

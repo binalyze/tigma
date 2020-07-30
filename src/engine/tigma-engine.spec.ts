@@ -9,7 +9,6 @@ import * as path from "path";
 import * as fs from "fs";
 import {SigmaRule} from "../rule/sigma-rule";
 import {ILoggerService} from "../services/logger/logger.service.interface";
-import {Identifier} from "../rule/identifier";
 import {testCaseJSON} from "../../test/case";
 
 describe('Engine', () =>
@@ -90,6 +89,19 @@ describe('Engine', () =>
         const engine = container.get<ITigmaEngine>(DI.ITigmaEngine);
 
         const filePath = path.resolve(yamlDir, "valid-scan.yaml");
+        const ruleContent = fs.readFileSync(filePath, "utf8");
+
+        const rules = engine.load(ruleContent);
+
+        const result = engine.scan(rules, testCaseJSON);
+        expect(result).not.toBe(null);
+    });
+
+    test('Engine.scan should match different types such as boolean ?= number', () =>
+    {
+        const engine = container.get<ITigmaEngine>(DI.ITigmaEngine);
+
+        const filePath = path.resolve(yamlDir, "valid-scan-different-types.yaml");
         const ruleContent = fs.readFileSync(filePath, "utf8");
 
         const rules = engine.load(ruleContent);

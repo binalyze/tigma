@@ -310,14 +310,7 @@ export class SigmaScanner implements ISigmaScanner
             switch (targetType)
             {
                 case "string":
-                    try
-                    {
-                        matched = this.matchString(source as string, target as string, modifiers);
-                    }
-                    catch (e)
-                    {
-                        matched = false;
-                    }
+                    matched = this.matchString(source as string, target as string, modifiers);
                     break;
                 case "number":
                     matched = this.matchNumber(source as number, target as number, modifiers);
@@ -409,7 +402,7 @@ export class SigmaScanner implements ISigmaScanner
         return (all) ? matchCount === identifier.values.length : matchCount > 0;
     }
 
-    private filterByIdentifier(json: object|object[], identifier: Identifier, depth: number = 0): boolean
+    private filterByIdentifier(json: object|object[], identifier: Identifier, depth: number): boolean
     {
         if (!json)
         {
