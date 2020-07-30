@@ -1,6 +1,6 @@
 {
   "name": "@binalyze/tigma",
-  "version": "1.4.17",
+  "version": "1.4.18",
   "main": "dist/tigma.js",
   "license": "GPL-3.0-only",
   "scripts": {
@@ -47,7 +47,7 @@
     "webpack-obfuscator": "^0.27.4"
   },
   "files": [
-    "dist/tigma.*",
+    "dist/*",
     "README.md",
     "package.json"
   ],
