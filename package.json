@@ -1,6 +1,6 @@
 {
   "name": "@binalyze/tigma",
-  "version": "1.4.18",
+  "version": "1.4.20",
   "main": "dist/tigma.js",
   "license": "GPL-3.0-only",
   "scripts": {
