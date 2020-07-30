@@ -16,15 +16,15 @@ import * as _ from "lodash";
 @injectable()
 export class SigmaScanner implements ISigmaScanner
 {
-    private readonly matchedElements: Map<string, object>;
+    private matchedElements: Record<string, object>;
 
     constructor(
         @inject(DI.ILoggerService) private readonly logger: ILoggerService)
     {
-        this.matchedElements = new Map<string, object>();
+        this.matchedElements = {};
     }
 
-    public scan(rules: SigmaRule[], json: ObjectLiteral) : Map<string, object>
+    public scan(rules: SigmaRule[], json: ObjectLiteral) : Record<string, object>
     {
         for (let i in rules)
         {
@@ -44,12 +44,12 @@ export class SigmaScanner implements ISigmaScanner
     //#region Utilities
     private clearMatchedElements()
     {
-        this.matchedElements.clear();
+        this.matchedElements = {};
     }
 
     private addMatchedElement(section: string, element: object)
     {
-        this.matchedElements.set(section, element);
+        this.matchedElements[section] = element;
     }
 
     private scanRule(rule: SigmaRule, json: ObjectLiteral) : boolean

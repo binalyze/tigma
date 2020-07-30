@@ -6,5 +6,5 @@ export interface ITigmaEngine
 {
     init(options: ITigmaOptions): void;
     load(ruleContent: string): SigmaRule[];
-    scan(rules: SigmaRule[], json: ObjectLiteral): Map<string, object>|null;
+    scan(rules: SigmaRule[], json: ObjectLiteral): Record<string, object>|null;
 }

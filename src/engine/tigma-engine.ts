@@ -35,7 +35,7 @@ export class TigmaEngine implements ITigmaEngine
         return this.loader.load(ruleContent);
     }
 
-    scan(rules: SigmaRule[], json: ObjectLiteral): Map<string, object>|null
+    scan(rules: SigmaRule[], json: ObjectLiteral): Record<string, object>|null
     {
         return this.scanner.scan(rules, json);
     }
