@@ -26,6 +26,10 @@ export class Detection
     @IsOptional()
     public timeframe?: string;
 
+    @IsString()
+    @IsOptional()
+    public message?: string;
+
     public getConditionNames(): string[]
     {
         return Object.getOwnPropertyNames(this)

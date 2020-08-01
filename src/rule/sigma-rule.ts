@@ -87,10 +87,6 @@ export class SigmaRule
     @IsOptional()
     @IsArray()
     public tags: string[];
-
-    @IsOptional()
-    @IsArray()
-    public info: string[];
     //#endregion
 
     public toAST(): Identifier[]
