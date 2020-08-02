@@ -50,6 +50,16 @@ export class SigmaRule
     public id: string;
 
     @IsOptional()
+    @IsString()
+    @Length(1, 64)
+    public created: string;
+
+    @IsOptional()
+    @IsString()
+    @Length(1, 64)
+    public modified: string;
+
+    @IsOptional()
     @IsArray()
     public related: Related[];
 
