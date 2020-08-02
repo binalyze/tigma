@@ -54,7 +54,7 @@ function setScanResult(scanResult)
   }
   else
   {
-    const keys = [...scanResult.keys()]; // Map<string, object>
+    const keys = [... Object.keys(scanResult)]; // Map<string, object>
     
     $('#match-result').removeClass('alert-danger').removeClass('alert-warning')
     .addClass('alert-success')
