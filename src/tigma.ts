@@ -14,7 +14,7 @@ export function Tigma(options?: ITigmaOptions): ITigmaEngine
   const logger = container.get<ILoggerService>(DI.ILoggerService);
   const engine = container.get<ITigmaEngine>(DI.ITigmaEngine);
 
-  logger.info(`Tigma Engine successfully created`);
+  logger.debug(`Tigma Engine successfully created`);
 
   return engine;
 }
