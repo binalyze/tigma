@@ -20,7 +20,7 @@
   "dependencies": {
     "@types/js-base64": "^2.3.2",
     "@types/lodash": "^4.14.157",
-    "class-transformer": "^0.2.3",
+    "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
     "filtrex": "^2.0.0",
     "inversify": "^5.0.1",
