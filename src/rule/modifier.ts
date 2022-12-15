@@ -1,39 +1,34 @@
-import {ModifierType} from "./modifier-type.enum";
+import { ModifierType } from "./modifier-type.enum";
 
-export class Modifier
-{
-    public type: ModifierType;
-    public negate: boolean;
+export class Modifier {
+  public type: ModifierType;
+  public negate: boolean;
 
-    constructor(modifier: string)
-    {
-        this.negate = modifier.indexOf('!') == 0;
+  constructor(modifier: string) {
+    this.negate = modifier.indexOf("!") == 0;
 
-        const typeName = ((this.negate) ? modifier.substring(1) : modifier);
+    const typeName = this.negate ? modifier.substring(1) : modifier;
 
-        if(!Object.values(ModifierType).includes(typeName as ModifierType))
-        {
-            throw new Error(`Unsupported modifier provided: ${typeName}`);
-        }
-
-        this.type = typeName as ModifierType;
+    if (!Object.values(ModifierType).includes(typeName as ModifierType)) {
+      throw new Error(`Unsupported modifier provided: ${typeName}`);
     }
 
-    static extractModifiers(identifier: string): Modifier[]
-    {
-        const parts = identifier.split('|');
+    this.type = typeName as ModifierType;
+  }
 
-        const modifiers = parts.splice(1); // Skip the first part which is name
+  static extractModifiers(identifier: string): Modifier[] {
+    const parts = identifier.split("|");
 
-        const list: Modifier[] = [];
+    const modifiers = parts.splice(1); // Skip the first part which is name
 
-        for(let i in modifiers)
-        {
-            const m = modifiers[i];
+    const list: Modifier[] = [];
 
-            list.push(new Modifier(m));
-        }
+    for (let i in modifiers) {
+      const m = modifiers[i];
 
-        return list;
+      list.push(new Modifier(m));
     }
+
+    return list;
+  }
 }

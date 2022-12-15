@@ -1,6 +1,5 @@
-export enum Action
-{
-    Global = 'global',
-    Reset = 'reset',
-    Repeat = 'repeat'
+export enum Action {
+  Global = "global",
+  Reset = "reset",
+  Repeat = "repeat",
 }

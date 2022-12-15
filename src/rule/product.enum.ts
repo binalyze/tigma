@@ -1,4 +1,3 @@
-export enum Product
-{
-    AIR = 'air'
+export enum Product {
+  AIR = "air",
 }

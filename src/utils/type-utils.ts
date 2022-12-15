@@ -1,19 +1,15 @@
-export class TypeUtils
-{
-    public static isArray(value: any): boolean
-    {
-        return Array.isArray(value);
-    }
+export class TypeUtils {
+  public static isArray(value: any): boolean {
+    return Array.isArray(value);
+  }
 
-    public static isPrimitive(value: any): boolean
-    {
-        const type = typeof value;
+  public static isPrimitive(value: any): boolean {
+    const type = typeof value;
 
-        return (value === null || ["string", "number", "boolean"].indexOf(type) >= 0);
-    }
+    return value === null || ["string", "number", "boolean"].indexOf(type) >= 0;
+  }
 
-    public static deepCopy<T>(source: T)
-    {
-        return JSON.parse(JSON.stringify(source));
-    }
+  public static deepCopy<T>(source: T) {
+    return JSON.parse(JSON.stringify(source));
+  }
 }

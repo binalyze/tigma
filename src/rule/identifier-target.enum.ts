@@ -1,5 +1,4 @@
-export enum IdentifierTarget
-{
-    Array = "array",
-    Object = "object"
+export enum IdentifierTarget {
+  Array = "array",
+  Object = "object",
 }

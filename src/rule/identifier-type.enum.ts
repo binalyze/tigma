@@ -1,6 +1,5 @@
-export enum IdentifierType
-{
-    List = "list",
-    Map = "map",
-    Primitive = "primitive"
+export enum IdentifierType {
+  List = "list",
+  Map = "map",
+  Primitive = "primitive",
 }
