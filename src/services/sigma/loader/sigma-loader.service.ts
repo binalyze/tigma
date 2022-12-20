@@ -94,8 +94,9 @@ export class SigmaLoader implements ISigmaLoader {
       this.logger.error(
         `Rule parsing returned with unexpected type: ${typeof rule}`
       );
-      return null;
-
+      throw new Error(
+        `Rule parsing returned with unexpected type  ${typeof rule}`
+      );
     }
 
     const errors = validateSync(rule);

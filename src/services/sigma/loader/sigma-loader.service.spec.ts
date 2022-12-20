@@ -28,8 +28,7 @@ describe("Sigma Loader", () => {
   });
 
   test("Should return null for invalid YAML files", () => {
-    const rules = sigmaLoader.load("some invalid");
-    expect(rules).toBeNull();
+    expect(() => sigmaLoader.load("some invalid")).toThrowError();
   });
 
   test("Should succeed for Minimal Sigma file", () => {
