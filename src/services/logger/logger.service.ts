@@ -1,31 +1,38 @@
-import { ILoggerService } from "./logger.service.interface";
-import { injectable } from "inversify";
+import {ILoggerService} from "./logger.service.interface";
+import {injectable} from "inversify";
 
 @injectable()
-export class LoggerService implements ILoggerService {
-  private debugLoggingEnabled: boolean = false;
+export class LoggerService implements ILoggerService
+{
+    private debugLoggingEnabled: boolean = false;
 
-  setDebugLogging(enabled: boolean): void {
-    this.debugLoggingEnabled = enabled;
-  }
-
-  debug(message: string): void {
-    if (this.debugLoggingEnabled !== true) {
-      return;
+    setDebugLogging(enabled: boolean): void
+    {
+        this.debugLoggingEnabled = enabled;
     }
 
-    console.debug(`Binalyze DEBUG: ${message}`);
-  }
+    debug(message: string): void
+    {
+        if(this.debugLoggingEnabled !== true)
+        {
+            return;
+        }
 
-  info(message: string): void {
-    console.info(`Binalyze INFO: ${message}`);
-  }
+        console.debug(`Binalyze DEBUG: ${message}`);
+    }
 
-  warn(message: string): void {
-    console.warn(`Binalyze WARN: ${message}`);
-  }
+    info(message: string): void
+    {
+        console.info(`Binalyze INFO: ${message}`);
+    }
 
-  error(message: string): void {
-    console.error(`Binalyze ERROR: ${message}`);
-  }
+    warn(message: string): void
+    {
+        console.warn(`Binalyze WARN: ${message}`);
+    }
+
+    error(message: string): void
+    {
+        console.error(`Binalyze ERROR: ${message}`);
+    }
 }

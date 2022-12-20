@@ -1,5 +1,6 @@
-import { ILoggerService } from "../services/logger/logger.service.interface";
+import {ILoggerService} from "../services/logger/logger.service.interface";
 
-export interface ITigmaOptions {
-  logger?: ILoggerService;
+export interface ITigmaOptions
+{
+    logger?: ILoggerService;
 }

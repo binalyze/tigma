@@ -1,1 +1,1 @@
-declare module "fs";
+declare module "fs"

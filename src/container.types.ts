@@ -1,14 +1,16 @@
-import { ILoggerService } from "./services/logger/logger.service.interface";
+import {ILoggerService} from "./services/logger/logger.service.interface";
 
-export const DI = {
-  ILoggerService: "ILoggerService",
+export const DI =
+{
+    ILoggerService: "ILoggerService",
 
-  ITigmaEngine: "ITigmaEngine",
+    ITigmaEngine: "ITigmaEngine",
 
-  ISigmaLoader: "ISigmaLoader",
-  ISigmaScanner: "ISigmaScanner",
+    ISigmaLoader: "ISigmaLoader",
+    ISigmaScanner: "ISigmaScanner",
 };
 
-export interface IContainerOptions {
-  logger?: ILoggerService;
+export interface IContainerOptions
+{
+    logger?: ILoggerService;
 }
