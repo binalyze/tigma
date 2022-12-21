@@ -3,4 +3,3 @@ title: Minimal Rule
 detection:
   selection:
     Property: value
-  condition:  selection

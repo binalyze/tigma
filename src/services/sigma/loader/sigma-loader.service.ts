@@ -20,6 +20,11 @@ export class SigmaLoader implements ISigmaLoader
 
     load(ruleContent: string) : SigmaRule[]|null
     {
+
+        if(!ruleContent || ruleContent.length === 0) {
+            this.logger.error(`Empty rule yaml provided!`);
+            throw new Error(`Empty rule yaml provided!`);
+        }
         let rules: SigmaRule[] = [];
         let json: any = null;
 
@@ -31,7 +36,7 @@ export class SigmaLoader implements ISigmaLoader
         catch (e)
         {
             this.logger.error(`Exception parsing rule with YAML parser: ${e.message}`);
-            return null;
+            throw e;
         }
 
         if(TypeUtils.isArray(json))
@@ -97,18 +102,21 @@ export class SigmaLoader implements ISigmaLoader
     {
         let rule: SigmaRule = plainToClass(SigmaRule, json);
 
-        if(typeof rule !== 'object')
-        {
-            this.logger.error(`Rule parsing returned with unexpected type: ${typeof rule}`);
-            return null;
-        }
+    if (typeof rule !== "object") {
+      this.logger.error(
+        `Rule parsing returned with unexpected type: ${typeof rule}`
+      );
+      throw new Error(
+        `Rule parsing returned with unexpected type  ${typeof rule}`
+      );
+    }
 
         const errors = validateSync(rule);
 
         if(errors.length >= 1)
         {
             this.logger.error(`Sigma rule validation failed: ${errors}`);
-            return null;
+            throw errors
         }
 
         return rule;
